@@ -34,9 +34,10 @@ public class PivotSub extends SubsystemBase{
 
   // Determines if we got to stop all movement on the motor
   private boolean isStopped = false;
-  private double desiredAngle = 6;
-  private double maxAngle = 175;
-  private double minAngle = 0;
+  private double maxAngle = 85;
+  private double minAngle = 10;
+  private double desiredAngle = minAngle;
+
   
   public PivotSub(){
     if(K_PivotSub.isUsingPivot){
@@ -57,12 +58,12 @@ public class PivotSub extends SubsystemBase{
       motor1.setIdleMode(IdleMode.kBrake);
 
       // set conversion factor so getPosition returns degrees
-      encoder1.setPositionConversionFactor((K_PivotSub.calibrateEndingAngle-K_PivotSub.calibrateStartingAngle) / K_PivotSub.calibrateAngleEncoderValue);
+      // encoder1.setPositionConversionFactor((K_PivotSub.calibrateEndingAngle-K_PivotSub.calibrateStartingAngle) / K_PivotSub.calibrateAngleEncoderValue);
+      encoder1.setPositionConversionFactor(K_PivotSub.tickPerRev*K_PivotSub.gearRatio/360.0);
       // set conversion ratio to 1 ONLY FOR CALIBRATING FOR ANGLE
       // encoder1.setPositionConversionFactor(1);
 
-      encoder1.setPosition(6);
-      desiredAngle = encoder1.getPosition();
+      encoder1.setPosition(minAngle);
     }
   }
 
@@ -84,7 +85,8 @@ public class PivotSub extends SubsystemBase{
       if(isStopped)
         emergencyStop();
       else{
-        double calculatedVoltage = (desiredAngle - encoder1.getPosition())/3;
+        // negative for negative voltage
+        double calculatedVoltage = (desiredAngle - encoder1.getPosition())/7;
         //System.out.println("Calced Voltage: " + calculatedVoltage);
         if (calculatedVoltage > K_PivotSub.pivotSpeed) {calculatedVoltage = K_PivotSub.pivotSpeed;}
         if (calculatedVoltage < -K_PivotSub.pivotSpeed) {calculatedVoltage = -K_PivotSub.pivotSpeed;}
@@ -95,9 +97,9 @@ public class PivotSub extends SubsystemBase{
           (twoMotors ? pivotMotors : motor1).setVoltage(0);
           // removed set soft min/maxes on limits
           if (!BtmLimit.get())
-            encoder1.setPosition(6);
+            encoder1.setPosition(minAngle);
           if (!TopLimit.get())
-            encoder1.setPosition(120);
+            encoder1.setPosition(maxAngle);
         }
       }
     }
@@ -167,5 +169,6 @@ public class PivotSub extends SubsystemBase{
     SmartDashboard.putBoolean("Bottom Limit", BtmLimit.get());
     SmartDashboard.putNumber("Pivot Encoder", encoder1.getPosition());
     SmartDashboard.putBoolean("Top Limit", TopLimit.get());
+    SmartDashboard.putNumber("DesiredAngle", desiredAngle);
   }
 }
