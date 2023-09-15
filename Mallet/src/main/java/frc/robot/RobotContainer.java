@@ -130,7 +130,7 @@ public class RobotContainer {
     m_autoChooser.addOption("Leave and Balance", new AutoGroup_LeaveCommAndBalance(m_drivetrain, m_gyro));
     m_autoChooser.addOption("Balance", new AutoGroup_Balance(m_drivetrain, m_gyro));
     m_autoChooser.addOption("Leave ", new MoveDistance(m_drivetrain, 5, false));
-    m_autoChooser.addOption("Set Extender DIstance", new ExtenderSetPositionWaitForComplete(m_extensionMotor, 4));
+    m_autoChooser.addOption("Set Extender Distance", new ExtenderSetPositionWaitForComplete(m_extensionMotor, 4));
     main.add("Auto Routine", m_autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
     // SmartDashboard.putData(m_autoChooser);
 

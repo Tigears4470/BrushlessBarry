@@ -40,7 +40,7 @@ public class PivotSubPID extends SubsystemBase{
       motor.setIdleMode(IdleMode.kBrake);
 
       // set conversion factor so getPosition returns degrees
-      encoder.setPositionConversionFactor((K_PivotSub.calibrateEndingAngle-K_PivotSub.calibrateStartingAngle) / K_PivotSub.calibrateAngleEncoderValue);
+      encoder.setPositionConversionFactor(360.0/K_PivotSub.gearRatio);
       // set conversion ratio to 1 ONLY FOR CALIBRATING FOR ANGLE
       // encoder1.setPositionConversionFactor(1);
 
@@ -56,8 +56,8 @@ public class PivotSubPID extends SubsystemBase{
       kMaxOutput = .22; 
       kMinOutput = -.2;
       // Smart Motion Coefficients
-      maxVel = 1600; // rpm
-      maxAcc = 1500;
+      maxVel = 720; // rpm: .2rps -> 12 rpm -> (adjusted by gear ratio)
+      maxAcc = 1440;
 
       // set PID coefficients
       pid.setP(kP);

@@ -34,7 +34,7 @@ public class PivotSub extends SubsystemBase{
 
   // Determines if we got to stop all movement on the motor
   private boolean isStopped = false;
-  private double maxAngle = 85;
+  private double maxAngle = 90;
   private double minAngle = 10;
   private double desiredAngle = minAngle;
 
@@ -58,12 +58,7 @@ public class PivotSub extends SubsystemBase{
       motor1.setIdleMode(IdleMode.kBrake);
 
       // set conversion factor so getPosition returns degrees
-      encoder1.setPositionConversionFactor((K_PivotSub.calibrateEndingAngle-K_PivotSub.calibrateStartingAngle) / K_PivotSub.calibrateAngleEncoderValue);
-      // encoder1.setPositionConversionFactor(K_PivotSub.tickPerRev*K_PivotSub.gearRatio/360.0);
-      // encoder1.setPositionConversionFactor();
-
-      // set conversion ratio to 1 ONLY FOR CALIBRATING FOR ANGLE
-      // encoder1.setPositionConversionFactor(1);
+      encoder1.setPositionConversionFactor(360.0/K_PivotSub.gearRatio);
 
       encoder1.setPosition(minAngle);
     }
