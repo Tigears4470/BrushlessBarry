@@ -43,12 +43,7 @@ public final class Constants {
 
     public static final class K_PivotSub {
         public static final boolean isUsingPivot = true;
-        public static final double calibrateStartingAngle = 6;
-        public static final double calibrateEndingAngle = 90;
-        public static final double calibrateAngleEncoderValue = 14.75;
         public static final double pivotSpeed = 3.5;
-
-        public static final int tickPerRev = 42;
         public static final int gearRatio = 60;
     }   
     
