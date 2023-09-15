@@ -137,7 +137,6 @@ public class PivotSubPID extends SubsystemBase{
   public double getDesiredAngle(){
     if(K_PivotSub.isUsingPivot)
       return desiredAngle;
-    
     return 0.0;
   }
 
@@ -152,6 +151,7 @@ public class PivotSubPID extends SubsystemBase{
         desiredAngle= maxAngle;
       if (desiredAngle < minAngle) 
         desiredAngle= minAngle;
+      pid.setReference(desiredAngle, CANSparkMax.ControlType.kSmartMotion);
     }
   }
 
