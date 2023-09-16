@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,8 +26,10 @@ import frc.robot.commands.extend.MoveExtenderBackwards;
 import frc.robot.commands.extend.MoveExtenderForward;
 import frc.robot.commands.pivot.PivotAngle;
 import frc.robot.commands.pivot.PivotDown;
+import frc.robot.commands.pivot.PivotDownPID;
 import frc.robot.commands.pivot.PivotMove;
 import frc.robot.commands.pivot.PivotUp;
+import frc.robot.commands.pivot.PivotUpPID;
 import frc.robot.commands.AutoGroups.AutoGroup_PlaceAndBalance;
 import frc.robot.commands.AutoGroups.AutoGroup_MiddleDrop;
 import frc.robot.commands.AutoGroups.AutoGroup_Balance;
@@ -41,7 +42,7 @@ public class RobotContainer {
   private static final Drivetrain m_drivetrain = new Drivetrain();
   private static final Limelight m_limelight = new Limelight();
   private static final GyroScope m_gyro = new GyroScope();
-  private static final PivotSub m_pivotMotor = new PivotSub();
+  private static final PivotSubPID m_pivotMotor = new PivotSubPID();
   private static final ClawSub m_clawMotor = new ClawSub();
   private static final ExtensionSub m_extensionMotor = new ExtensionSub();
 
@@ -103,7 +104,7 @@ public class RobotContainer {
     entry_ClawEncoder.setDouble(m_clawMotor.getClawEncoder().getPosition());
 
     // //PIVOT
-    entry_PivotEncoder.setDouble(m_pivotMotor.getEncoder1().getPosition());
+    entry_PivotEncoder.setDouble(m_pivotMotor.getEncoder().getPosition());
     entry_PivotMaxAngle.setDouble(m_pivotMotor.getMaxAngle());
 
     // //EXTENSION INFO
@@ -140,7 +141,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     m_drivetrain.setDefaultCommand(new ArcadeDrive(m_drivetrain, m_controller_drive));
     m_extensionMotor.setDefaultCommand(new ExtenderMove(m_extensionMotor));
-    m_pivotMotor.setDefaultCommand(new PivotMove(m_pivotMotor));
     m_clawMotor.setDefaultCommand(new ClawMove(m_clawMotor));
 
     // Add joystick buttons to maps
@@ -179,9 +179,9 @@ public class RobotContainer {
     // controllerButtons_arm.get("1").toggleOnTrue(Commands.startEnd(m_clawMotor::clamp2, m_clawMotor::moveMotors, m_clawMotor));
     controllerButtons_arm.get("trigger").onTrue(new ClawToggle(m_clawMotor));
     // moves pivot down
-    controllerButtons_arm.get("2").whileTrue(new PivotDown(m_pivotMotor));
+    controllerButtons_arm.get("2").whileTrue(new PivotDownPID(m_pivotMotor));
     // moves pivot up
-    controllerButtons_arm.get("3").whileTrue(new PivotUp(m_pivotMotor));
+    controllerButtons_arm.get("3").whileTrue(new PivotUpPID(m_pivotMotor));
     // retracts arm
     controllerButtons_arm.get("4").whileTrue(new MoveExtenderBackwards(m_extensionMotor));
     // extends arm
