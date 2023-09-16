@@ -58,8 +58,10 @@ public class PivotSub extends SubsystemBase{
       motor1.setIdleMode(IdleMode.kBrake);
 
       // set conversion factor so getPosition returns degrees
-      // encoder1.setPositionConversionFactor((K_PivotSub.calibrateEndingAngle-K_PivotSub.calibrateStartingAngle) / K_PivotSub.calibrateAngleEncoderValue);
-      encoder1.setPositionConversionFactor(K_PivotSub.tickPerRev*K_PivotSub.gearRatio/360.0);
+      encoder1.setPositionConversionFactor((K_PivotSub.calibrateEndingAngle-K_PivotSub.calibrateStartingAngle) / K_PivotSub.calibrateAngleEncoderValue);
+      // encoder1.setPositionConversionFactor(K_PivotSub.tickPerRev*K_PivotSub.gearRatio/360.0);
+      // encoder1.setPositionConversionFactor();
+
       // set conversion ratio to 1 ONLY FOR CALIBRATING FOR ANGLE
       // encoder1.setPositionConversionFactor(1);
 
@@ -86,7 +88,7 @@ public class PivotSub extends SubsystemBase{
         emergencyStop();
       else{
         // negative for negative voltage
-        double calculatedVoltage = (desiredAngle - encoder1.getPosition())/7;
+        double calculatedVoltage = (desiredAngle - encoder1.getPosition())/3;
         //System.out.println("Calced Voltage: " + calculatedVoltage);
         if (calculatedVoltage > K_PivotSub.pivotSpeed) {calculatedVoltage = K_PivotSub.pivotSpeed;}
         if (calculatedVoltage < -K_PivotSub.pivotSpeed) {calculatedVoltage = -K_PivotSub.pivotSpeed;}

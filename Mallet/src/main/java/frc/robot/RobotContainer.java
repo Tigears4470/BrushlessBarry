@@ -140,7 +140,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     m_drivetrain.setDefaultCommand(new ArcadeDrive(m_drivetrain, m_controller_drive));
     m_extensionMotor.setDefaultCommand(new ExtenderMove(m_extensionMotor));
-    // m_pivotMotor.setDefaultCommand(new PivotMove(m_pivotMotor));
+    m_pivotMotor.setDefaultCommand(new PivotMove(m_pivotMotor));
     m_clawMotor.setDefaultCommand(new ClawMove(m_clawMotor));
 
     // Add joystick buttons to maps
