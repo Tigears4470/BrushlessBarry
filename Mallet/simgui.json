@@ -8,6 +8,7 @@
       "/LiveWindow/Ungrouped/DigitalInput[4]": "Digital Input",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/LiveWindow/Ungrouped/navX-Sensor[1]": "Gyro",
+      "/Shuffleboard/Driver's Tab/Auto Routine": "String Chooser",
       "/SmartDashboard/ClawSubV2": "Subsystem",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     }

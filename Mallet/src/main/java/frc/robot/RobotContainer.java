@@ -101,14 +101,14 @@ public class RobotContainer {
     entry_GyroZ.setDouble(m_gyro.getAngleZ());
 
     // CLAW
-    entry_ClawEncoder.setDouble(m_clawMotor.getClawEncoder().getPosition());
+    // entry_ClawEncoder.setDouble(m_clawMotor.getClawEncoder().getPosition());
 
     // //PIVOT
     entry_PivotEncoder.setDouble(m_pivotMotor.getEncoder().getPosition());
     entry_PivotMaxAngle.setDouble(m_pivotMotor.getMaxAngle());
 
     // //EXTENSION INFO
-    entry_ExtEncoder.setDouble(m_extensionMotor.getEncoder().getPosition());
+    // entry_ExtEncoder.setDouble(m_extensionMotor.getEncoder().getPosition());
 
     // //LIMELIGHT INFO
     entry_LimelightXOffset.setDouble(m_limelight.getXOffset());
@@ -179,9 +179,9 @@ public class RobotContainer {
     // controllerButtons_arm.get("1").toggleOnTrue(Commands.startEnd(m_clawMotor::clamp2, m_clawMotor::moveMotors, m_clawMotor));
     controllerButtons_arm.get("trigger").onTrue(new ClawToggle(m_clawMotor));
     // moves pivot down
-    controllerButtons_arm.get("2").whileTrue(new PivotDownPID(m_pivotMotor));
+    controllerButtons_arm.get("3").whileTrue(new PivotDownPID(m_pivotMotor));
     // moves pivot up
-    controllerButtons_arm.get("3").whileTrue(new PivotUpPID(m_pivotMotor));
+    controllerButtons_arm.get("5").whileTrue(new PivotUpPID(m_pivotMotor));
     // retracts arm
     controllerButtons_arm.get("4").whileTrue(new MoveExtenderBackwards(m_extensionMotor));
     // extends arm

@@ -124,6 +124,7 @@ public class PivotSubPID extends SubsystemBase{
     if(K_PivotSub.isUsingPivot){
       desiredAngle = angle;
     }
+    pid.setReference(desiredAngle, CANSparkMax.ControlType.kSmartMotion);
   }
 
   //Returns the current angle of the pivot
@@ -168,7 +169,7 @@ public class PivotSubPID extends SubsystemBase{
     SmartDashboard.putBoolean("Bottom Limit", BtmLimit.get());
     SmartDashboard.putNumber("Pivot Encoder", encoder.getPosition());
     SmartDashboard.putBoolean("Top Limit", TopLimit.get());
-
+    SmartDashboard.putNumber("Desired Angle", desiredAngle);
     double p = SmartDashboard.getNumber("P Gain", 0);
     double i = SmartDashboard.getNumber("I Gain", 0);
     double d = SmartDashboard.getNumber("D Gain", 0);
@@ -195,7 +196,7 @@ public class PivotSubPID extends SubsystemBase{
     if((minV != minVel)) { pid.setSmartMotionMinOutputVelocity(minV,0); minVel = minV; }
     if((maxA != maxAcc)) { pid.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
     if((allE != allowedErr)) { pid.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
-    desiredAngle = SmartDashboard.getNumber("Set Position", 0);
+    // desiredAngle = SmartDashboard.getNumber("Set Position", 0);
       /**
        * As with other PID modes, Smart Motion is set by calling the
        * setReference method on an existing pid object and setting
