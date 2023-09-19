@@ -31,14 +31,16 @@ public final class Constants {
 
 
     public static final class K_ExtSub {
-        public static final boolean isUsingExt = false;     //If is using the extension subsystem
+        public static final boolean isUsingExt = true;     //If is using the extension subsystem
         public static final double calibrateStartingAngle = 0;
         public static final double calibrateEndingAngle = 9;
         public static final double calibrateAngleEncoderValue = 90.9325180053;
         public static final double extSpeed = 5;
 
+        public static final double inchesPerSecond = 4;
         public static final int tickPerRev = 42;
         public static final int gearRatio = 60;
+        public static final int gearRadius = 14/16; // inches (measured from gear in contact with inner component)
     }
 
     public static final class K_PivotSub {

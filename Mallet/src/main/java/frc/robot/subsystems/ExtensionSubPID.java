@@ -7,12 +7,14 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.K_ExtSub;
 import frc.robot.Constants.K_PivotSub;
+import java.lang.Math;
 
-public class PivotSubPID extends SubsystemBase{
+public class ExtensionSubPID extends SubsystemBase{
   // These are the Pivot Motors
   // Idle - Break on both
-  // ID's 5 & 6
+  // ID 6
   private final CANSparkMax motor;
   private final SparkMaxPIDController pid;
   private final RelativeEncoder encoder;
@@ -28,37 +30,41 @@ public class PivotSubPID extends SubsystemBase{
   private final DigitalInput TopLimit = new DigitalInput(1);
 
   // Determines if we got to stop all movement on the motor
-  private double desiredAngle = 0;
-  private double maxAngle = 100;
-  private double minAngle = 0;
+  private double desiredAngle = -12;
+  private double maxPos = 0;
+  private double minPos = -12;
   
-  public PivotSubPID(){
+  public ExtensionSubPID(){
     if(K_PivotSub.isUsingPivot){
-      motor = new CANSparkMax(5, MotorType.kBrushless);
+      motor = new CANSparkMax(6, MotorType.kBrushless);
       encoder = motor.getEncoder();
       pid = motor.getPIDController();
       motor.setIdleMode(IdleMode.kBrake);
 
       // set conversion factor so getPosition returns degrees
-      encoder.setPositionConversionFactor(360.0/K_PivotSub.gearRatio);
+
+      // arc length = r(14/16 of an inch?)*theta
+      encoder.setPositionConversionFactor(K_ExtSub.gearRadius*(360.0/K_ExtSub.gearRatio)/180*Math.PI); // .091629
       // set conversion ratio to 1 ONLY FOR CALIBRATING FOR ANGLE
       // encoder1.setPositionConversionFactor(1);
 
-      encoder.setPosition(0);
+      encoder.setPosition(desiredAngle);
       desiredAngle = encoder.getPosition();
 
       // PID coefficients
-      kP = 0.0006015; 
+      kP = 0.00000006015; 
       kI = 0.0000005;
       kD = 0; 
       kIz = 0.005; 
       kFF = 0.000101; 
-      kMaxOutput = .7; 
-      kMinOutput = -.7;
+      kMaxOutput = .2; 
+      kMinOutput = -.2;
       // Smart Motion Coefficients
-      double rps = 0.3;
-      maxVel = rps*60*60; // rpm: .3rps -> 12 rpm -> (adjusted by gear ratio)
-      maxAcc = 1440;
+
+      
+      double rps = K_ExtSub.inchesPerSecond / K_ExtSub.gearRadius / 2 / Math.PI;
+      maxVel = rps*60*K_ExtSub.gearRatio; // rpm: .3rps -> 12 rpm -> (adjusted by gear ratio)
+      maxAcc = maxVel*1.5;
 
       // set PID coefficients
       pid.setP(kP);
@@ -115,8 +121,8 @@ public class PivotSubPID extends SubsystemBase{
   }
 
   //Return the maxAngle
-  public double getMaxAngle(){
-    return maxAngle;
+  public double getMaxPos(){
+    return maxPos;
   }
 
   // sets the desired angle to set angle to
@@ -149,14 +155,14 @@ public class PivotSubPID extends SubsystemBase{
       if ((increment > 0 && TopLimit.get()) || (increment < 0 && BtmLimit.get())) {
         desiredAngle += increment;
       } else if (!TopLimit.get()) {
-        maxAngle = encoder.getPosition();
+        maxPos = encoder.getPosition();
       } else if (!BtmLimit.get()) {
-        minAngle = encoder.getPosition();
+        minPos = encoder.getPosition();
       }
-      if (desiredAngle > maxAngle) 
-        desiredAngle= maxAngle;
-      if (desiredAngle < minAngle) 
-        desiredAngle= minAngle;
+      if (desiredAngle > maxPos) 
+        desiredAngle= maxPos;
+      if (desiredAngle < minPos) 
+        desiredAngle= minPos;
       pid.setReference(desiredAngle, CANSparkMax.ControlType.kSmartMotion);
     }
   }

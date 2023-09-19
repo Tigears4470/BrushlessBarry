@@ -37,8 +37,11 @@ public class ExtensionSub extends SubsystemBase{
       clampLimit = new DigitalInput(4);
       motor.setIdleMode(IdleMode.kBrake);
       // set conversion factor so getPosition returns degrees
-      encoder.setPositionConversionFactor((K_ExtSub.calibrateEndingAngle-K_ExtSub.calibrateStartingAngle) / K_ExtSub.calibrateAngleEncoderValue);
+      // encoder.setPositionConversionFactor((K_ExtSub.calibrateEndingAngle-K_ExtSub.calibrateStartingAngle) / K_ExtSub.calibrateAngleEncoderValue);
       
+      // arc length = r(14/16 of an inch?)*theta
+      encoder.setPositionConversionFactor(K_ExtSub.gearRadius*(360.0/K_ExtSub.gearRatio)/180*Math.PI); // .091629
+
       // code to set default to find conversion factor
       // encoder.setPositionConversionFactor(1);
       encoder.setPosition(0);

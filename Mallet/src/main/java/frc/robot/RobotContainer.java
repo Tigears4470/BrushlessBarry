@@ -179,9 +179,9 @@ public class RobotContainer {
     // controllerButtons_arm.get("1").toggleOnTrue(Commands.startEnd(m_clawMotor::clamp2, m_clawMotor::moveMotors, m_clawMotor));
     controllerButtons_arm.get("trigger").onTrue(new ClawToggle(m_clawMotor));
     // moves pivot down
-    controllerButtons_arm.get("3").whileTrue(new PivotDownPID(m_pivotMotor));
+    controllerButtons_arm.get("2").whileTrue(new PivotDownPID(m_pivotMotor));
     // moves pivot up
-    controllerButtons_arm.get("5").whileTrue(new PivotUpPID(m_pivotMotor));
+    controllerButtons_arm.get("3").whileTrue(new PivotUpPID(m_pivotMotor));
     // retracts arm
     controllerButtons_arm.get("4").whileTrue(new MoveExtenderBackwards(m_extensionMotor));
     // extends arm
