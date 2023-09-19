@@ -23,7 +23,9 @@ import frc.robot.commands.claw.ClawToggle;
 import frc.robot.commands.extend.ExtenderMove;
 import frc.robot.commands.extend.ExtenderSetPositionWaitForComplete;
 import frc.robot.commands.extend.MoveExtenderBackwards;
+import frc.robot.commands.extend.MoveExtenderBackwardsPID;
 import frc.robot.commands.extend.MoveExtenderForward;
+import frc.robot.commands.extend.MoveExtenderForwardPID;
 import frc.robot.commands.pivot.PivotAngle;
 import frc.robot.commands.pivot.PivotDown;
 import frc.robot.commands.pivot.PivotDownPID;
@@ -44,7 +46,7 @@ public class RobotContainer {
   private static final GyroScope m_gyro = new GyroScope();
   private static final PivotSubPID m_pivotMotor = new PivotSubPID();
   private static final ClawSub m_clawMotor = new ClawSub();
-  private static final ExtensionSub m_extensionMotor = new ExtensionSub();
+  private static final ExtensionSubPID m_extensionMotor = new ExtensionSubPID();
 
   // INIT JOYSTICKS (NOTE: PLEASE RENAME TO LEFT/RIGHT)
   public static Joystick m_controller_arm = new Joystick(0);
@@ -105,7 +107,7 @@ public class RobotContainer {
 
     // //PIVOT
     entry_PivotEncoder.setDouble(m_pivotMotor.getEncoder().getPosition());
-    entry_PivotMaxAngle.setDouble(m_pivotMotor.getMaxAngle());
+    entry_PivotMaxAngle.setDouble(m_pivotMotor.getMaxPos());
 
     // //EXTENSION INFO
     // entry_ExtEncoder.setDouble(m_extensionMotor.getEncoder().getPosition());
@@ -131,16 +133,15 @@ public class RobotContainer {
     m_autoChooser.addOption("Leave and Balance", new AutoGroup_LeaveCommAndBalance(m_drivetrain, m_gyro));
     m_autoChooser.addOption("Balance", new AutoGroup_Balance(m_drivetrain, m_gyro));
     m_autoChooser.addOption("Leave ", new MoveDistance(m_drivetrain, 5, false));
-    m_autoChooser.addOption("Set Extender Distance", new ExtenderSetPositionWaitForComplete(m_extensionMotor, 4));
+    // m_autoChooser.addOption("Set Extender Distance", new ExtenderSetPositionWaitForComplete(m_extensionMotor, 4));
     main.add("Auto Routine", m_autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
-    // SmartDashboard.putData(m_autoChooser);
 
   }
 
   // assign button functions
   private void configureButtonBindings() {
     m_drivetrain.setDefaultCommand(new ArcadeDrive(m_drivetrain, m_controller_drive));
-    m_extensionMotor.setDefaultCommand(new ExtenderMove(m_extensionMotor));
+    // m_extensionMotor.setDefaultCommand(new ExtenderMove(m_extensionMotor));
     m_clawMotor.setDefaultCommand(new ClawMove(m_clawMotor));
 
     // Add joystick buttons to maps
@@ -183,9 +184,9 @@ public class RobotContainer {
     // moves pivot up
     controllerButtons_arm.get("3").whileTrue(new PivotUpPID(m_pivotMotor));
     // retracts arm
-    controllerButtons_arm.get("4").whileTrue(new MoveExtenderBackwards(m_extensionMotor));
+    controllerButtons_arm.get("4").whileTrue(new MoveExtenderBackwardsPID(m_extensionMotor));
     // extends arm
-    controllerButtons_arm.get("5").whileTrue(new MoveExtenderForward(m_extensionMotor));
+    controllerButtons_arm.get("5").whileTrue(new MoveExtenderForwardPID(m_extensionMotor));
     // // select cube mode
     // controllerButtons_arm.get("6").onTrue(new SetConeMode(m_limelight, m_clawMotor));
     // // select cube mode
