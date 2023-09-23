@@ -49,13 +49,13 @@ public class PivotSubPID extends SubsystemBase{
       desiredPos = encoder.getPosition();
 
       // PID coefficients
-      kP = 0.0006015; 
+      kP = 0.0001515; 
       kI = 0.0000005;
       kD = 0; 
       kIz = 0.005; 
-      kFF = 0.000101; 
-      kMaxOutput = .7; 
-      kMinOutput = -.7;
+      kFF = 0.00028; 
+      kMaxOutput = 1; 
+      kMinOutput = -1;
       // Smart Motion Coefficients
       double rps = 0.3;
       maxVel = rps*60*60; // rpm: .3rps -> 12 rpm -> (adjusted by gear ratio)
@@ -87,21 +87,24 @@ public class PivotSubPID extends SubsystemBase{
       pid.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
       pid.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
 
-      // display PID coefficients on SmartDashboard
-      SmartDashboard.putNumber("P Gain", kP);
-      SmartDashboard.putNumber("I Gain", kI);
-      SmartDashboard.putNumber("D Gain", kD);
-      SmartDashboard.putNumber("I Zone", kIz);
-      SmartDashboard.putNumber("Feed Forward", kFF);
-      SmartDashboard.putNumber("Max Output", kMaxOutput);
-      SmartDashboard.putNumber("Min Output", kMinOutput);
+      if (K_PivotSub.devMode) {
+        // display PID coefficients on SmartDashboard
+        SmartDashboard.putNumber("Pivot P Gain", kP);
+        SmartDashboard.putNumber("Pivot I Gain", kI);
+        SmartDashboard.putNumber("Pivot D Gain", kD);
+        SmartDashboard.putNumber("Pivot I Zone", kIz);
+        SmartDashboard.putNumber("Pivot Feed Forward", kFF);
+        SmartDashboard.putNumber("Pivot Max Output", kMaxOutput);
+        SmartDashboard.putNumber("Pivot Min Output", kMinOutput);
 
-      // display Smart Motion coefficients
-      SmartDashboard.putNumber("Max Velocity", maxVel);
-      SmartDashboard.putNumber("Min Velocity", minVel);
-      SmartDashboard.putNumber("Max Acceleration", maxAcc);
-      SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-      SmartDashboard.putNumber("Set Position", 0);
+        // display Smart Motion coefficients
+        SmartDashboard.putNumber("Pivot Max Velocity", maxVel);
+        SmartDashboard.putNumber("Pivot Min Velocity", minVel);
+        SmartDashboard.putNumber("Pivot Max Acceleration", maxAcc);
+        SmartDashboard.putNumber("Pivot Allowed Closed Loop Error", allowedErr);
+        SmartDashboard.putNumber("Pivot Set Position", 0);
+      }
+      
 
       // button to toggle between velocity and smart motion modes
     
@@ -173,20 +176,21 @@ public class PivotSubPID extends SubsystemBase{
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Bottom Limit", BtmLimit.get());
-    SmartDashboard.putNumber("Pivot Encoder", encoder.getPosition());
+    SmartDashboard.putNumber("Pivot Pivot Encoder", encoder.getPosition());
     SmartDashboard.putBoolean("Top Limit", TopLimit.get());
-    SmartDashboard.putNumber("Desired Angle", desiredPos);
-    double p = SmartDashboard.getNumber("P Gain", 0);
-    double i = SmartDashboard.getNumber("I Gain", 0);
-    double d = SmartDashboard.getNumber("D Gain", 0);
-    double iz = SmartDashboard.getNumber("I Zone", 0);
-    double ff = SmartDashboard.getNumber("Feed Forward", 0);
-    double max = SmartDashboard.getNumber("Max Output", 0);
-    double min = SmartDashboard.getNumber("Min Output", 0);
-    double maxV = SmartDashboard.getNumber("Max Velocity", 0);
-    double minV = SmartDashboard.getNumber("Min Velocity", 0);
-    double maxA = SmartDashboard.getNumber("Max Acceleration", 0);
-    double allE = SmartDashboard.getNumber("Allowed Closed Loop Error", 0);
+    SmartDashboard.putNumber("Pivot Desired Angle", desiredPos);
+    if (K_PivotSub.devMode) {
+      double p = SmartDashboard.getNumber("Pivot P Gain", 0);
+    double i = SmartDashboard.getNumber("Pivot I Gain", 0);
+    double d = SmartDashboard.getNumber("Pivot D Gain", 0);
+    double iz = SmartDashboard.getNumber("Pivot I Zone", 0);
+    double ff = SmartDashboard.getNumber("Pivot Feed Forward", 0);
+    double max = SmartDashboard.getNumber("Pivot Max Output", 0);
+    double min = SmartDashboard.getNumber("Pivot Min Output", 0);
+    double maxV = SmartDashboard.getNumber("Pivot Max Velocity", 0);
+    double minV = SmartDashboard.getNumber("Pivot Min Velocity", 0);
+    double maxA = SmartDashboard.getNumber("Pivot Max Acceleration", 0);
+    double allE = SmartDashboard.getNumber("Pivot Allowed Closed Loop Error", 0);
 
     // if PID coefficients on SmartDashboard have changed, write new values to controller
     if((p != kP)) { pid.setP(p); kP = p; }
@@ -202,12 +206,14 @@ public class PivotSubPID extends SubsystemBase{
     if((minV != minVel)) { pid.setSmartMotionMinOutputVelocity(minV,0); minVel = minV; }
     if((maxA != maxAcc)) { pid.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
     if((allE != allowedErr)) { pid.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
-    // desiredAngle = SmartDashboard.getNumber("Set Position", 0);
+    // desiredAngle = SmartDashboard.getNumber("Pivot Set Position", 0);
       /**
        * As with other PID modes, Smart Motion is set by calling the
        * setReference method on an existing pid object and setting
        * the control type to kSmartMotion
        */
       pid.setReference(desiredPos, CANSparkMax.ControlType.kSmartMotion);
+    }
+    
   }
 }

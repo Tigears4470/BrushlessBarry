@@ -37,16 +37,19 @@ public final class Constants {
         public static final double calibrateAngleEncoderValue = 90.9325180053;
         public static final double extSpeed = 5;
 
-        public static final double inchesPerSecond = 4;
+        public static final double inchesPerSecond = 12;
         public static final int tickPerRev = 42;
         public static final int gearRatio = 60;
-        public static final int gearRadius = 14/16; // inches (measured from gear in contact with inner component)
+        public static final double gearRadius = 14.0/16; // inches (measured from gear in contact with inner component)
+        public static final boolean devMode = false;
+
     }
 
     public static final class K_PivotSub {
         public static final boolean isUsingPivot = true;
         public static final double pivotSpeed = 3.5;
         public static final int gearRatio = 60;
+        public static final boolean devMode = true;
     }   
     
     public static final class K_ClawSub {

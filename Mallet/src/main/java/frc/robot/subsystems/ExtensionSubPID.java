@@ -28,9 +28,9 @@ public class ExtensionSubPID extends SubsystemBase{
   //           --> DEFAULT IS ALWAYS TRUE BUT WHEN HIT THEY RETURN FALSE!
 
   // Determines if we got to stop all movement on the motor
-  private double desiredPosition = -12;
+  private double desiredPosition = -10;
   private double maxPosition = 0;
-  private double minPosition = -12;
+  private double minPosition = -10;
   
   public ExtensionSubPID(){
     if(K_PivotSub.isUsingPivot){
@@ -38,6 +38,7 @@ public class ExtensionSubPID extends SubsystemBase{
       encoder = motor.getEncoder();
       pid = motor.getPIDController();
       motor.setIdleMode(IdleMode.kBrake);
+      motor.setInverted(false);
 
       // set conversion factor so getPosition returns degrees
 
@@ -90,26 +91,26 @@ public class ExtensionSubPID extends SubsystemBase{
       pid.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
       pid.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
 
-      // display PID coefficients on SmartDashboard
-      SmartDashboard.putNumber("Extension P Gain", kP);
-      SmartDashboard.putNumber("Extension I Gain", kI);
-      SmartDashboard.putNumber("Extension D Gain", kD);
-      SmartDashboard.putNumber("Extension I Zone", kIz);
-      SmartDashboard.putNumber("Extension Feed Forward", kFF);
-      SmartDashboard.putNumber("Extension Max Output", kMaxOutput);
-      SmartDashboard.putNumber("Extension Min Output", kMinOutput);
+      if (K_ExtSub.devMode) {
+        // display PID coefficients on SmartDashboard
+        SmartDashboard.putNumber("Extension P Gain", kP);
+        SmartDashboard.putNumber("Extension I Gain", kI);
+        SmartDashboard.putNumber("Extension D Gain", kD);
+        SmartDashboard.putNumber("Extension I Zone", kIz);
+        SmartDashboard.putNumber("Extension Feed Forward", kFF);
+        SmartDashboard.putNumber("Extension Max Output", kMaxOutput);
+        SmartDashboard.putNumber("Extension Min Output", kMinOutput);
 
-      // display Smart Motion coefficients
-      SmartDashboard.putNumber("Extension Max Velocity", maxVel);
-      SmartDashboard.putNumber("Extension Min Velocity", minVel);
-      SmartDashboard.putNumber("Extension Max Acceleration", maxAcc);
-      SmartDashboard.putNumber("Extension Allowed Closed Loop Error", allowedErr);
-      SmartDashboard.putNumber("Extension Set Position", 0);
+        // display Smart Motion coefficients
+        SmartDashboard.putNumber("Extension Max Velocity", maxVel);
+        SmartDashboard.putNumber("Extension Min Velocity", minVel);
+        SmartDashboard.putNumber("Extension Max Acceleration", maxAcc);
+        SmartDashboard.putNumber("Extension Allowed Closed Loop Error", allowedErr);
 
-      // button to toggle between velocity and smart motion modes
-    
-      SmartDashboard.putBoolean("Extension Mode", true);
+        // button to toggle between velocity and smart motion modes
 
+        SmartDashboard.putBoolean("Extension Mode", true);
+      }
     }
   }
 
@@ -170,40 +171,42 @@ public class ExtensionSubPID extends SubsystemBase{
 
   @Override
   public void periodic() {
+    if (K_ExtSub.devMode) {
+      double p = SmartDashboard.getNumber("Extension P Gain", 0);
+      double i = SmartDashboard.getNumber("Extension I Gain", 0);
+      double d = SmartDashboard.getNumber("Extension D Gain", 0);
+      double iz = SmartDashboard.getNumber("Extension I Zone", 0);
+      double ff = SmartDashboard.getNumber("Extension Feed Forward", 0);
+      double max = SmartDashboard.getNumber("Extension Max Output", 0);
+      double min = SmartDashboard.getNumber("Extension Min Output", 0);
+      double maxV = SmartDashboard.getNumber("Extension Max Velocity", 0);
+      double minV = SmartDashboard.getNumber("Extension Min Velocity", 0);
+      double maxA = SmartDashboard.getNumber("Extension Max Acceleration", 0);
+      double allE = SmartDashboard.getNumber("Extension Allowed Closed Loop Error", 0);
+  
+      // if PID coefficients on SmartDashboard have changed, write new values to controller
+      if((p != kP)) { pid.setP(p); kP = p; }
+      if((i != kI)) { pid.setI(i); kI = i; }
+      if((d != kD)) { pid.setD(d); kD = d; }
+      if((iz != kIz)) { pid.setIZone(iz); kIz = iz; }
+      if((ff != kFF)) { pid.setFF(ff); kFF = ff; }
+      if((max != kMaxOutput) || (min != kMinOutput)) { 
+        pid.setOutputRange(min, max); 
+        kMinOutput = min; kMaxOutput = max; 
+      }
+      if((maxV != maxVel)) { pid.setSmartMotionMaxVelocity(maxV,0); maxVel = maxV; }
+      if((minV != minVel)) { pid.setSmartMotionMinOutputVelocity(minV,0); minVel = minV; }
+      if((maxA != maxAcc)) { pid.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
+      if((allE != allowedErr)) { pid.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
+      // desiredAngle = SmartDashboard.getNumber("Set Position", 0);
+        /**
+         * As with other PID modes, Smart Motion is set by calling the
+         * setReference method on an existing pid object and setting
+         * the control type to kSmartMotion
+         */
+        pid.setReference(desiredPosition, CANSparkMax.ControlType.kSmartMotion);
+    }
     SmartDashboard.putNumber("Extension Encoder", encoder.getPosition());
     SmartDashboard.putNumber("Extension Desired Angle", desiredPosition);
-    double p = SmartDashboard.getNumber("Extension P Gain", 0);
-    double i = SmartDashboard.getNumber("Extension I Gain", 0);
-    double d = SmartDashboard.getNumber("Extension D Gain", 0);
-    double iz = SmartDashboard.getNumber("Extension I Zone", 0);
-    double ff = SmartDashboard.getNumber("Extension Feed Forward", 0);
-    double max = SmartDashboard.getNumber("Extension Max Output", 0);
-    double min = SmartDashboard.getNumber("Extension Min Output", 0);
-    double maxV = SmartDashboard.getNumber("Extension Max Velocity", 0);
-    double minV = SmartDashboard.getNumber("Extension Min Velocity", 0);
-    double maxA = SmartDashboard.getNumber("Extension Max Acceleration", 0);
-    double allE = SmartDashboard.getNumber("Extension Allowed Closed Loop Error", 0);
-
-    // if PID coefficients on SmartDashboard have changed, write new values to controller
-    if((p != kP)) { pid.setP(p); kP = p; }
-    if((i != kI)) { pid.setI(i); kI = i; }
-    if((d != kD)) { pid.setD(d); kD = d; }
-    if((iz != kIz)) { pid.setIZone(iz); kIz = iz; }
-    if((ff != kFF)) { pid.setFF(ff); kFF = ff; }
-    if((max != kMaxOutput) || (min != kMinOutput)) { 
-      pid.setOutputRange(min, max); 
-      kMinOutput = min; kMaxOutput = max; 
-    }
-    if((maxV != maxVel)) { pid.setSmartMotionMaxVelocity(maxV,0); maxVel = maxV; }
-    if((minV != minVel)) { pid.setSmartMotionMinOutputVelocity(minV,0); minVel = minV; }
-    if((maxA != maxAcc)) { pid.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
-    if((allE != allowedErr)) { pid.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
-    // desiredAngle = SmartDashboard.getNumber("Set Position", 0);
-      /**
-       * As with other PID modes, Smart Motion is set by calling the
-       * setReference method on an existing pid object and setting
-       * the control type to kSmartMotion
-       */
-      pid.setReference(desiredPosition, CANSparkMax.ControlType.kSmartMotion);
   }
 }

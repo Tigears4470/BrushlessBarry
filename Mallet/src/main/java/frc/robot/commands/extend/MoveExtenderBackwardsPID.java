@@ -22,7 +22,7 @@ public class MoveExtenderBackwardsPID extends CommandBase{
     // Tells the Extension Motor to go Backwards
     @Override
     public void execute() {
-        m_extender.changePosition(.22);
+        m_extender.changePosition(-.1);
     }
 
     // Called once the command ends or is interrupted.
