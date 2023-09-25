@@ -42,6 +42,8 @@ public final class Constants {
         public static final int gearRatio = 60;
         public static final double gearRadius = 14.0/16; // inches (measured from gear in contact with inner component)
         public static final boolean devMode = false;
+        public static final double tolerance = 1; // 1 inch tolerance
+
 
     }
 

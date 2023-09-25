@@ -26,7 +26,6 @@ import frc.robot.commands.extend.MoveExtenderBackwards;
 import frc.robot.commands.extend.MoveExtenderBackwardsPID;
 import frc.robot.commands.extend.MoveExtenderForward;
 import frc.robot.commands.extend.MoveExtenderForwardPID;
-import frc.robot.commands.pivot.PivotAngle;
 import frc.robot.commands.pivot.PivotDownPID;
 import frc.robot.commands.pivot.PivotUpPID;
 import frc.robot.commands.AutoGroups.AutoGroup_PlaceAndBalance;
@@ -104,7 +103,7 @@ public class RobotContainer {
 
     // //PIVOT
     entry_PivotEncoder.setDouble(m_pivotMotor.getEncoder().getPosition());
-    entry_PivotMaxAngle.setDouble(m_pivotMotor.getMaxPos());
+    entry_PivotMaxAngle.setDouble(m_pivotMotor.getMaxAngle());
 
     // //EXTENSION INFO
     // entry_ExtEncoder.setDouble(m_extensionMotor.getEncoder().getPosition());

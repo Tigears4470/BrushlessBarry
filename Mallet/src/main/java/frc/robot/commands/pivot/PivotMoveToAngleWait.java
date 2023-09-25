@@ -4,18 +4,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PivotSubPID;
 
 
-public class PivotMoveToAngle extends CommandBase{
+public class PivotMoveToAngleWait extends CommandBase{
     // Required Subsystems
     private PivotSubPID m_pivot;
     private double m_finalAngle;
 
     // Creation Function of the Class
-    public PivotMoveToAngle(PivotSubPID pivot) {
+    public PivotMoveToAngleWait(PivotSubPID pivot) {
         m_pivot = pivot;
         addRequirements(m_pivot);
     }
 
-    public PivotMoveToAngle(PivotSubPID pivot, double angle){
+    public PivotMoveToAngleWait(PivotSubPID pivot, double angle){
         m_pivot = pivot;
         m_finalAngle = angle;
         addRequirements(m_pivot);
@@ -24,7 +24,7 @@ public class PivotMoveToAngle extends CommandBase{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_pivot.setPos(m_finalAngle);
+        m_pivot.setAngle(m_finalAngle);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

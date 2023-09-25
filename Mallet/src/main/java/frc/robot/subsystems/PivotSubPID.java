@@ -28,10 +28,10 @@ public class PivotSubPID extends SubsystemBase{
   private final DigitalInput BtmLimit = new DigitalInput(0);
   private final DigitalInput TopLimit = new DigitalInput(1);
 
-  // Determines if we got to stop all movement on the motor
-  private double desiredPos = 0;
-  private double maxPos = 100;
-  private double minPos = 0;
+  // Limits range of motion
+  private double desiredAngle = 0;
+  private double maxAngle = 100;
+  private double minAngle = 0;
   
   public PivotSubPID(){
     if(K_PivotSub.isUsingPivot){
@@ -46,7 +46,7 @@ public class PivotSubPID extends SubsystemBase{
       // encoder1.setPositionConversionFactor(1);
 
       encoder.setPosition(0);
-      desiredPos = encoder.getPosition();
+      desiredAngle = encoder.getPosition();
 
       // PID coefficients
       kP = 0.0001515; 
@@ -119,36 +119,40 @@ public class PivotSubPID extends SubsystemBase{
   }
 
   //Return the maxAngle
-  public double getMaxPos(){
-    return maxPos;
+  public double getMaxAngle(){
+    return maxAngle;
   }
 
   // sets the desired angle to set angle to
   // 0 - 100 degrees
-  public void setPos (double pos) {
+  public void setAngle (double angle) {
     if(K_PivotSub.isUsingPivot){
-      desiredPos = pos;
+      if (angle < minAngle)
+        angle = minAngle;
+      if (angle > maxAngle)
+        angle = maxAngle;
+      desiredAngle = angle;
     }
-    pid.setReference(desiredPos, CANSparkMax.ControlType.kSmartMotion);
+    pid.setReference(desiredAngle, CANSparkMax.ControlType.kSmartMotion);
   }
 
   //Returns the current angle of the pivot
-  public double getCurrentPos(){
+  public double getCurrentAngle(){
     if(K_PivotSub.isUsingPivot)
       return encoder.getPosition();
     return 0.0;
   }
 
   //Returns the current desired angle
-  public double getDesiredPos(){
+  public double getDesiredAngle(){
     if(K_PivotSub.isUsingPivot)
-      return desiredPos;
+      return desiredAngle;
     return 0.0;
   }
 
   //Returns true or false depending on whether the arm's current position is within a tolerance of its desired position
   public boolean withinTolerance() {
-    return Math.abs((getDesiredPos()-getCurrentPos())) < K_PivotSub.tolerance;
+    return Math.abs((getDesiredAngle()-getCurrentAngle())) < K_PivotSub.tolerance;
   }
 
   // Changes angle to aim for
@@ -156,17 +160,17 @@ public class PivotSubPID extends SubsystemBase{
   public void changeAngle (double increment) {
     if(K_PivotSub.isUsingPivot){
       if ((increment > 0 && TopLimit.get()) || (increment < 0 && BtmLimit.get())) {
-        desiredPos += increment;
+        desiredAngle += increment;
       } else if (!TopLimit.get()) {
-        maxPos = encoder.getPosition();
+        maxAngle = encoder.getPosition();
       } else if (!BtmLimit.get()) {
-        minPos = encoder.getPosition();
+        minAngle = encoder.getPosition();
       }
-      if (desiredPos > maxPos) 
-        desiredPos= maxPos;
-      if (desiredPos < minPos) 
-        desiredPos= minPos;
-      pid.setReference(desiredPos, CANSparkMax.ControlType.kSmartMotion);
+      if (desiredAngle > maxAngle) 
+        desiredAngle= maxAngle;
+      if (desiredAngle < minAngle) 
+        desiredAngle= minAngle;
+      pid.setReference(desiredAngle, CANSparkMax.ControlType.kSmartMotion);
     }
   }
 
@@ -183,7 +187,7 @@ public class PivotSubPID extends SubsystemBase{
     SmartDashboard.putBoolean("Bottom Limit", BtmLimit.get());
     SmartDashboard.putNumber("Pivot Pivot Encoder", encoder.getPosition());
     SmartDashboard.putBoolean("Top Limit", TopLimit.get());
-    SmartDashboard.putNumber("Pivot Desired Angle", desiredPos);
+    SmartDashboard.putNumber("Pivot Desired Angle", desiredAngle);
     if (K_PivotSub.devMode) {
       double p = SmartDashboard.getNumber("Pivot P Gain", 0);
     double i = SmartDashboard.getNumber("Pivot I Gain", 0);
@@ -217,7 +221,7 @@ public class PivotSubPID extends SubsystemBase{
        * setReference method on an existing pid object and setting
        * the control type to kSmartMotion
        */
-      pid.setReference(desiredPos, CANSparkMax.ControlType.kSmartMotion);
+      pid.setReference(desiredAngle, CANSparkMax.ControlType.kSmartMotion);
     }
     
   }

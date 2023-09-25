@@ -19,15 +19,8 @@ public class ExtensionSubPID extends SubsystemBase{
   private final SparkMaxPIDController pid;
   private final RelativeEncoder encoder;
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxVel, minVel, maxAcc, allowedErr;
-  // This is the motorControllerGroup of the 2 prior motors
-  // Intended to make the Pivot Point Turn
-
-  // Limit Switches
-  // WARNING - MAKE SURE THE LIMITS ARE HAVING THE YELLOW IN GROUND!
-  //           YES IT LOOKS WRONG BUT BLAME ELECTRICAL FOR THEIR WIRING!
-  //           --> DEFAULT IS ALWAYS TRUE BUT WHEN HIT THEY RETURN FALSE!
-
-  // Determines if we got to stop all movement on the motor
+  
+  // Limits range of motion
   private double desiredPosition = -10;
   private double maxPosition = 0;
   private double minPosition = -10;
@@ -44,8 +37,6 @@ public class ExtensionSubPID extends SubsystemBase{
 
       // arc length = r(14/16 of an inch?)*theta
       encoder.setPositionConversionFactor(K_ExtSub.gearRadius*(360.0/K_ExtSub.gearRatio)/180*Math.PI); // .091629
-      // set conversion ratio to 1 ONLY FOR CALIBRATING FOR ANGLE
-      // encoder1.setPositionConversionFactor(1);
 
       encoder.setPosition(desiredPosition);
       desiredPosition = encoder.getPosition();
@@ -119,32 +110,42 @@ public class ExtensionSubPID extends SubsystemBase{
     return encoder;
   }
 
-  //Return the maxAngle
+  //Return the maxPosition
   public double getMaxPosition(){
     return maxPosition;
   }
 
-  // sets the desired angle to set angle to
-  // 0 - 100 degrees
-  public void setAngle (double angle) {
+  // sets the desired position
+  // 0 - 10 inches
+  public void setPosition (double position) {
+    position -= 10; // account for -10 to 0 range
     if(K_PivotSub.isUsingPivot){
-      desiredPosition = angle;
+      if (position < minPosition)
+        position = minPosition;
+      if (position > maxPosition)
+        position = maxPosition;
+      desiredPosition = position;
     }
     pid.setReference(desiredPosition, CANSparkMax.ControlType.kSmartMotion);
   }
 
   //Returns the current angle of the pivot
-  public double getCurrentAngle(){
+  public double getCurrentPosition(){
     if(K_PivotSub.isUsingPivot)
       return encoder.getPosition();
     return 0.0;
   }
 
-  //Returns the current desired angle
+  //Returns the current desired angleMallet/src/main/java/frc/robot/subsystems/ExtensionSubPID.java
   public double getDesiredPosition(){
     if(K_PivotSub.isUsingPivot)
       return desiredPosition;
     return 0.0;
+  }
+
+  //Returns true or false depending on whether the arm's current position is within a tolerance of its desired position
+  public boolean withinTolerance() {
+    return Math.abs((getDesiredPosition()-getCurrentPosition())) < K_ExtSub.tolerance;
   }
 
   // Changes angle to aim for
