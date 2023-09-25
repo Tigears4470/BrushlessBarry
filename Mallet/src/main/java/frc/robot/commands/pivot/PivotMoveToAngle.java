@@ -1,29 +1,35 @@
-package frc.robot.commands.extend;
+package frc.robot.commands.pivot;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ExtensionSubPID;
+import frc.robot.subsystems.PivotSubPID;
 
 
-public class ExtenderMoveToZero extends CommandBase{
+public class PivotMoveToAngle extends CommandBase{
     // Required Subsystems
-    private ExtensionSubPID m_extender;
+    private PivotSubPID m_pivot;
+    private double m_finalAngle;
 
     // Creation Function of the Class
-    public ExtenderMoveToZero(ExtensionSubPID ext){
-        m_extender = ext;
-        addRequirements(m_extender);
+    public PivotMoveToAngle(PivotSubPID pivot) {
+        m_pivot = pivot;
+        addRequirements(m_pivot);
+    }
+
+    public PivotMoveToAngle(PivotSubPID pivot, double angle){
+        m_pivot = pivot;
+        m_finalAngle = angle;
+        addRequirements(m_pivot);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        m_pivot.setAngle(m_finalAngle);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
-    // Tells the extender motor to either move to it's angle or stablize
     @Override
     public void execute() {
-        m_extender.setPosition(0);
     }
 
     // Called once the command ends or is interrupted.
@@ -34,6 +40,7 @@ public class ExtenderMoveToZero extends CommandBase{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        //Checks to see if the motor is close to the desired angle before ending (for command groups)
         return true;
     }
 }

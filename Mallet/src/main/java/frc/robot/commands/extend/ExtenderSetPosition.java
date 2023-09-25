@@ -1,16 +1,16 @@
 package frc.robot.commands.extend;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ExtensionSub;
+import frc.robot.subsystems.ExtensionSubPID;
 
 
 public class ExtenderSetPosition extends CommandBase{
     // Required Subsystems
-    private ExtensionSub m_extender;
+    private ExtensionSubPID m_extender;
     private double m_finalPosition;
 
     // Creation Function of the Class
-    public ExtenderSetPosition(ExtensionSub ext, double position){
+    public ExtenderSetPosition(ExtensionSubPID ext, double position){
         m_extender = ext;
         m_finalPosition = position;
         addRequirements(m_extender);
@@ -21,7 +21,6 @@ public class ExtenderSetPosition extends CommandBase{
     @Override
     public void initialize() {
         m_extender.setPosition(m_finalPosition);
-        m_extender.moveMotors();
     }
 
     // Called every time the scheduler runs while the command is scheduled.

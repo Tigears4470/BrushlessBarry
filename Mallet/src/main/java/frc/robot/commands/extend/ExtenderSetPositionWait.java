@@ -1,21 +1,21 @@
 package frc.robot.commands.extend;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ExtensionSub;
+import frc.robot.subsystems.ExtensionSubPID;
 
 
-public class ExtenderSetPositionWaitForComplete extends CommandBase{
+public class ExtenderSetPositionWait extends CommandBase{
     // Required Subsystems
-    private ExtensionSub m_extender;
+    private ExtensionSubPID m_extender;
     private double m_finalPosition;
 
     // Creation Function of the Class
-    public ExtenderSetPositionWaitForComplete(ExtensionSub ext){
+    public ExtenderSetPositionWait(ExtensionSubPID ext){
         m_extender = ext;
         m_finalPosition = m_extender.getDesiredPosition();
         addRequirements(m_extender);
     }
-    public ExtenderSetPositionWaitForComplete(ExtensionSub ext, double position){
+    public ExtenderSetPositionWait(ExtensionSubPID ext, double position){
         m_extender = ext;
         m_finalPosition = position;
         addRequirements(m_extender);
@@ -31,7 +31,6 @@ public class ExtenderSetPositionWaitForComplete extends CommandBase{
     // Tells the extender motor to either move to it's angle or stablize
     @Override
     public void execute() {
-        m_extender.moveMotors();
     }
 
     // Called once the command ends or is interrupted.
@@ -43,6 +42,6 @@ public class ExtenderSetPositionWaitForComplete extends CommandBase{
     // may backfire if extender due to voltage cannot reach within range
     @Override
     public boolean isFinished() {
-        return Math.abs(m_extender.getCurrentPosition()-m_finalPosition) < 2;
+        return m_extender.withinTolerance();
     }
 }
