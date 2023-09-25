@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.K_ClawSub;
 
 public class ClawSub2 extends SubsystemBase{
-  // This is the Claw Extension Motor
   // Idle - Break
   // ID - 7
   private final CANSparkMax motor;
@@ -32,7 +31,7 @@ public class ClawSub2 extends SubsystemBase{
       // set original position which should represent original position
       encoder.setPosition(0);
 
-      // control grab strength
+      // control intake speed
       motor.setSmartCurrentLimit(8, 100);
     } else {
       motor = null;
@@ -45,7 +44,7 @@ public class ClawSub2 extends SubsystemBase{
     return encoder;
   }
 
-  //Return if the claw is open
+  //Return if the intake is grabbing or throwing or neither
   public int getDirection(){
     if(K_ClawSub.isUsingClaw){
         return direction;
