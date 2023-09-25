@@ -125,7 +125,7 @@ public class PivotSubPID extends SubsystemBase{
 
   // sets the desired angle to set angle to
   // 0 - 100 degrees
-  public void setPosition (double pos) {
+  public void setPos (double pos) {
     if(K_PivotSub.isUsingPivot){
       desiredPos = pos;
     }
@@ -144,6 +144,11 @@ public class PivotSubPID extends SubsystemBase{
     if(K_PivotSub.isUsingPivot)
       return desiredPos;
     return 0.0;
+  }
+
+  //Returns true or false depending on whether the arm's current position is within a tolerance of its desired position
+  public boolean withinTolerance() {
+    return Math.abs((getDesiredPos()-getCurrentPos())) < K_PivotSub.tolerance;
   }
 
   // Changes angle to aim for

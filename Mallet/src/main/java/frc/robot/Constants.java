@@ -50,6 +50,7 @@ public final class Constants {
         public static final double pivotSpeed = 3.5;
         public static final int gearRatio = 60;
         public static final boolean devMode = true;
+        public static final double tolerance = 5; // 5 degree tolerance
     }   
     
     public static final class K_ClawSub {
