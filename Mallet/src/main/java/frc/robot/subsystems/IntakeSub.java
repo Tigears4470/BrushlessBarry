@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.K_ClawSub;
 
-public class ClawSub2 extends SubsystemBase{
+public class IntakeSub extends SubsystemBase{
   // Idle - Break
   // ID - 7
   private final CANSparkMax motor;
@@ -20,7 +20,7 @@ public class ClawSub2 extends SubsystemBase{
   // controls speed of motor
   private double voltage;
   
-  public ClawSub2(){
+  public IntakeSub(){
     if(K_ClawSub.isUsingClaw){
       motor = new CANSparkMax(7, MotorType.kBrushless);
       encoder = motor.getEncoder();
