@@ -16,6 +16,10 @@ import frc.robot.commands.claw.ClawDecrementPosition;
 import frc.robot.commands.claw.ClawIncrementPositionV2;
 import frc.robot.commands.claw.ClawMove;
 import frc.robot.commands.claw.ClawToggle;
+import frc.robot.commands.claw.IntakeEmergencyStop;
+import frc.robot.commands.claw.IntakeGrab;
+import frc.robot.commands.claw.IntakeStop;
+import frc.robot.commands.claw.IntakeThrow;
 import frc.robot.commands.extend.MoveExtenderBackwardsPID;
 import frc.robot.commands.extend.MoveExtenderForwardPID;
 import frc.robot.commands.pivot.PivotDownPID;
@@ -30,6 +34,7 @@ public class RobotContainer {
   private static final Drivetrain m_drivetrain = new Drivetrain();
   private static final Limelight m_limelight = new Limelight();
   private static final GyroScope m_gyro = new GyroScope();
+  private static final IntakeSub m_intake = new IntakeSub();
   private static final PivotSubPID m_pivotMotor = new PivotSubPID();
   private static final ClawSub m_clawMotor = new ClawSub();
   private static final ExtensionSubPID m_extensionMotor = new ExtensionSubPID();
@@ -158,6 +163,10 @@ public class RobotContainer {
     // controllerButtons_drive.get("10").onTrue(new TurnBy(m_drivetrain, m_gyro, 90));
     // reset encoders
     controllerButtons_drive.get("8").onTrue(resetEncodersCommand());
+    controllerButtons_drive.get("1").onTrue(new IntakeGrab(m_intake));
+    controllerButtons_drive.get("2").onTrue(new IntakeStop(m_intake));
+    controllerButtons_drive.get("3").onTrue(new IntakeThrow(m_intake));
+    controllerButtons_drive.get("4").onTrue(new IntakeEmergencyStop(m_intake));
     //  controllerButtons_drive.get("9").onTrue(new AutoGroup_MiddleDrop(m_drivetrain, m_pivotMotor, m_extensionMotor, m_clawMotor));
 
 

@@ -16,7 +16,7 @@ public class IntakeSub extends SubsystemBase{
   private final RelativeEncoder encoder;
 
   // -1 = grab, 0 = idle, 1 = throw
-  private int direction;
+  private double direction;
   // controls speed of motor
   private double voltage;
   
@@ -45,14 +45,14 @@ public class IntakeSub extends SubsystemBase{
   }
 
   //Return if the intake is grabbing or throwing or neither
-  public int getDirection(){
+  public double getDirection(){
     if(K_ClawSub.isUsingClaw){
         return direction;
     }
     return 0;
   }
 
-  public void setDirection(int newDirection) {
+  public void setDirection(double newDirection) {
     direction = newDirection;
   }
 
