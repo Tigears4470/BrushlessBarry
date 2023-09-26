@@ -16,7 +16,7 @@ public class Group_Angle40 extends SequentialCommandGroup {
         if (pivot.getEncoder().getPosition() < 50) {
             addCommands(
                 new PivotMoveToAngleWait(pivot, 40),
-                new ExtenderSetPosition(extend, -8)
+                new ExtenderSetPosition(extend, 0)
             );
         }
         else {

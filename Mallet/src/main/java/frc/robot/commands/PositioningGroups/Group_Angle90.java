@@ -13,12 +13,12 @@ public class Group_Angle90 extends SequentialCommandGroup {
         if (pivot.getEncoder().getPosition() < 45) {
             addCommands(
                 new PivotMoveToAngle(pivot, 90),
-                new ExtenderSetPosition(extend, 4)
+                new ExtenderSetPosition(extend, 0)
             );
         }
         else {
             addCommands(
-                new ExtenderSetPosition(extend, 4),
+                new ExtenderSetPosition(extend, 0),
                 new PivotMoveToAngle(pivot, 90)
             );
         }

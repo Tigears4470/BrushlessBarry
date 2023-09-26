@@ -4,7 +4,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.SparkMaxPIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.K_ExtSub;
@@ -52,8 +51,8 @@ public class ExtensionSubPID extends SubsystemBase{
       // Smart Motion Coefficients
 
       
-      double rps = K_ExtSub.inchesPerSecond / K_ExtSub.gearRadius / 2 / Math.PI;
-      maxVel = rps*60*K_ExtSub.gearRatio; // rpm: .3rps -> 12 rpm -> (adjusted by gear ratio)
+      double rps = K_ExtSub.extInchesPerSecond / K_ExtSub.gearRadius / 2 / Math.PI;
+      maxVel = rps*60*K_ExtSub.gearRatio; // inches
       maxAcc = maxVel*1.5;
 
       // set PID coefficients

@@ -3,7 +3,6 @@ import frc.robot.subsystems.ExtensionSubPID;
 import frc.robot.subsystems.PivotSubPID;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.claw.ClawClose;
 import frc.robot.commands.claw.ClawMove;
 import frc.robot.commands.claw.ClawOpen;

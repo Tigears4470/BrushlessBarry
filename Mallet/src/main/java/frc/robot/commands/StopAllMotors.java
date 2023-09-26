@@ -1,18 +1,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PivotSub;
+import frc.robot.subsystems.PivotSubPID;
 import frc.robot.subsystems.ClawSub;
-import frc.robot.subsystems.ExtensionSub;
+import frc.robot.subsystems.ExtensionSubPID;
 
 
 public class StopAllMotors extends CommandBase{
     // Required Subsystems
-    private PivotSub m_pivot;
-    private ExtensionSub m_extender;
+    private PivotSubPID m_pivot;
+    private ExtensionSubPID m_extender;
     private ClawSub m_claw;
 
-    public StopAllMotors(PivotSub pivot, ExtensionSub extender, ClawSub claw){
+    public StopAllMotors(PivotSubPID pivot, ExtensionSubPID extender, ClawSub claw){
         m_pivot = pivot;
         m_extender = extender;
         m_claw = claw;

@@ -32,26 +32,18 @@ public final class Constants {
 
     public static final class K_ExtSub {
         public static final boolean isUsingExt = true;     //If is using the extension subsystem
-        public static final double calibrateStartingAngle = 0;
-        public static final double calibrateEndingAngle = 9;
-        public static final double calibrateAngleEncoderValue = 90.9325180053;
-        public static final double extSpeed = 5;
-
-        public static final double inchesPerSecond = 12;
-        public static final int tickPerRev = 42;
+        public static final boolean devMode = false;
+        public static final double extInchesPerSecond = 12;
         public static final int gearRatio = 60;
         public static final double gearRadius = 14.0/16; // inches (measured from gear in contact with inner component)
-        public static final boolean devMode = false;
         public static final double tolerance = 1; // 1 inch tolerance
-
-
     }
 
     public static final class K_PivotSub {
         public static final boolean isUsingPivot = true;
+        public static final boolean devMode = true;
         public static final double pivotSpeed = 3.5;
         public static final int gearRatio = 60;
-        public static final boolean devMode = true;
         public static final double tolerance = 5; // 5 degree tolerance
     }   
     
