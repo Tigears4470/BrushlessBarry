@@ -110,6 +110,10 @@ public class PivotSubPID extends SubsystemBase{
     
       SmartDashboard.putBoolean("Mode", true);
 
+    }else{
+      encoder = null;
+      motor = null;
+      pid = null;
     }
   }
 

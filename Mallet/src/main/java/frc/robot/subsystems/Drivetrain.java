@@ -11,20 +11,20 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
-  private final CANSparkMax m_flMotor = new CANSparkMax(3, MotorType.kBrushless);
-  private final CANSparkMax m_blMotor = new CANSparkMax(4, MotorType.kBrushless);
-  MotorControllerGroup m_left = new MotorControllerGroup(m_flMotor, m_blMotor);
-  private final CANSparkMax m_frMotor = new CANSparkMax(1, MotorType.kBrushless);
-  private final CANSparkMax m_brMotor = new CANSparkMax(2, MotorType.kBrushless);
-  MotorControllerGroup m_right = new MotorControllerGroup(m_frMotor, m_brMotor);
+  private final CANSparkMax m_flMotor;
+  private final CANSparkMax m_blMotor;
+  MotorControllerGroup m_left;
+  private final CANSparkMax m_frMotor;
+  private final CANSparkMax m_brMotor;
+  MotorControllerGroup m_right;
 
-  private final RelativeEncoder m_leftEncoder = m_flMotor.getEncoder();
-  private final RelativeEncoder m_rightEncoder = m_frMotor.getEncoder();
-  private final RelativeEncoder m_leftBackEncoder = m_blMotor.getEncoder();
-  private final RelativeEncoder m_rightBackEncoder = m_brMotor.getEncoder();
+  private final RelativeEncoder m_leftEncoder;
+  private final RelativeEncoder m_rightEncoder;
+  private final RelativeEncoder m_leftBackEncoder;
+  private final RelativeEncoder m_rightBackEncoder;
 
   // Set up the differential drive controller
-  private final DifferentialDrive m_diffDrive = new DifferentialDrive(m_left, m_right);
+  private final DifferentialDrive m_diffDrive;
  // private final DifferentialDrive m_diffDrive = new DifferentialDrive(m_brMotor, m_frMotor);
 
   // Set up the BuiltInAccelerometer
@@ -34,19 +34,51 @@ public class Drivetrain extends SubsystemBase {
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
-    m_flMotor.setIdleMode(IdleMode.kBrake);
-    m_blMotor.setIdleMode(IdleMode.kBrake);
-    m_frMotor.setIdleMode(IdleMode.kBrake);
-    m_brMotor.setIdleMode(IdleMode.kBrake);
-    // We need to invert one side of the drivetrain so that positive voltages result in both sides moving forward. Depending on how your robot's gearbox is constructed, you might have to invert the left side instead.
-    m_brMotor.setInverted(true);
-    m_frMotor.setInverted(true);
-    m_leftEncoder.setPositionConversionFactor(Constants.K_WHEEL_DIAMETER_INCH);
-    m_rightEncoder.setPositionConversionFactor(Constants.K_WHEEL_DIAMETER_INCH);
-    m_leftBackEncoder.setPositionConversionFactor(Constants.K_WHEEL_DIAMETER_INCH);
-    m_rightBackEncoder.setPositionConversionFactor(Constants.K_WHEEL_DIAMETER_INCH);
-    
-    resetEncoders();
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      m_flMotor = new CANSparkMax(3, MotorType.kBrushless);
+      m_blMotor = new CANSparkMax(4, MotorType.kBrushless);
+      m_left = new MotorControllerGroup(m_flMotor, m_blMotor);
+
+      m_frMotor = new CANSparkMax(1, MotorType.kBrushless);
+      m_brMotor = new CANSparkMax(2, MotorType.kBrushless);
+      m_right = new MotorControllerGroup(m_frMotor, m_brMotor);
+      
+      m_rightBackEncoder = m_brMotor.getEncoder();
+      m_leftEncoder = m_flMotor.getEncoder();
+      m_rightEncoder = m_frMotor.getEncoder();
+      m_leftBackEncoder = m_blMotor.getEncoder();
+
+      m_diffDrive = new DifferentialDrive(m_left, m_right);
+
+      m_flMotor.setIdleMode(IdleMode.kBrake);
+      m_blMotor.setIdleMode(IdleMode.kBrake);
+      m_frMotor.setIdleMode(IdleMode.kBrake);
+      m_brMotor.setIdleMode(IdleMode.kBrake);
+      // We need to invert one side of the drivetrain so that positive voltages result in both sides moving forward. Depending on how your robot's gearbox is constructed, you might have to invert the left side instead.
+      m_brMotor.setInverted(true);
+      m_frMotor.setInverted(true);
+      m_leftEncoder.setPositionConversionFactor(Constants.K_WHEEL_DIAMETER_INCH);
+      m_rightEncoder.setPositionConversionFactor(Constants.K_WHEEL_DIAMETER_INCH);
+      m_leftBackEncoder.setPositionConversionFactor(Constants.K_WHEEL_DIAMETER_INCH);
+      m_rightBackEncoder.setPositionConversionFactor(Constants.K_WHEEL_DIAMETER_INCH);
+      
+      resetEncoders();
+    }else{
+      m_flMotor = null;
+      m_blMotor = null;
+      m_left = null;
+
+      m_frMotor = null;
+      m_brMotor = null;
+      m_right = null;
+
+      m_rightBackEncoder = null;
+      m_rightEncoder = null;
+      m_leftEncoder = null;
+      m_leftBackEncoder = null;
+
+      m_diffDrive = null;
+    }
   }
   //testing single motor
   public CANSparkMax getTestMotor() {
@@ -55,18 +87,24 @@ public class Drivetrain extends SubsystemBase {
 
   // negative is forward or to the right
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
-    m_diffDrive.arcadeDrive(xaxisSpeed, .5*zaxisRotate);
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      m_diffDrive.arcadeDrive(xaxisSpeed, .5*zaxisRotate);
+    }
   }
 
   public void resetEncoders() {
-    m_leftEncoder.setPosition(0);
-    m_rightEncoder.setPosition(0);
-    m_leftBackEncoder.setPosition(0);
-    m_rightBackEncoder.setPosition(0);
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      m_leftEncoder.setPosition(0);
+      m_rightEncoder.setPosition(0);
+      m_leftBackEncoder.setPosition(0);
+      m_rightBackEncoder.setPosition(0);
+    }
   }
 
   public void runTest(double speed){
-    m_brMotor.set(speed);
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      m_brMotor.set(speed);
+    }
   }
 
   public void setBalanceToCurrentPos(boolean backwards) {
@@ -86,7 +124,9 @@ public class Drivetrain extends SubsystemBase {
 
   // For when the time calls for it, run this
   public void stopMotors(){
-    m_diffDrive.arcadeDrive(0, 0);
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      m_diffDrive.arcadeDrive(0, 0);
+    }
   }
 
   public RelativeEncoder getLeftEncoder() {
@@ -106,23 +146,35 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double getLeftDistanceInch() {
-    return m_leftEncoder.getPosition();
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      return m_leftEncoder.getPosition();
+    }
+    return 0.0;
   }
 
   public double getLeftBackDistanceInch(){
-    return m_leftBackEncoder.getPosition();
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      return m_leftBackEncoder.getPosition();
+    }
+    return 0.0;
   }
 
   public double getRightDistanceInch() {
-    return m_rightEncoder.getPosition();
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      return m_rightEncoder.getPosition();
+    }
+    return 0.0;
   }
 
   public double getRightBackDistanceInch(){
-    return m_rightBackEncoder.getPosition();
+    if(Constants.K_ISUSINGDRIVETRAIN){
+      return m_rightBackEncoder.getPosition();
+    }
+    return 0.0;
   }
 
   public double getLeftAverageDistanceInch(){
-    return ((getLeftDistanceInch()) + (getLeftBackDistanceInch())) / 2.0;
+      return ((getLeftDistanceInch()) + (getLeftBackDistanceInch())) / 2.0;
   }
 
   public double getRightAverageDistanceInch(){

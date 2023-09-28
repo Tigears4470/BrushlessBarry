@@ -101,6 +101,10 @@ public class ExtensionSubPID extends SubsystemBase{
 
         SmartDashboard.putBoolean("Extension Mode", true);
       }
+    }else{
+      encoder = null;
+      motor = null;
+      pid = null;
     }
   }
 

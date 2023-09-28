@@ -56,4 +56,5 @@ public final class Constants {
         public static final double coneMaxCurrent = .3;
         public static final double cubeMaxCurrent = .2;
     }
+    public static final boolean K_ISUSINGDRIVETRAIN = true;
 }
