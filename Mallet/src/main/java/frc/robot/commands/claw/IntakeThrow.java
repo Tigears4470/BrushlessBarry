@@ -20,7 +20,7 @@ public class IntakeThrow extends CommandBase{
     // Relatively change claw by joystick
     @Override
     public void execute() {
-        myIntake.setDirection(.5);
+        myIntake.setDirection(.2);
     }
 
     // Called once the command ends or is interrupted.
