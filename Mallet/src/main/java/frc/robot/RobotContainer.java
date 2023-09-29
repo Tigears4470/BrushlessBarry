@@ -12,20 +12,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
-import frc.robot.commands.claw.ClawDecrementPosition;
-import frc.robot.commands.claw.ClawIncrementPositionV2;
-import frc.robot.commands.claw.ClawMove;
-import frc.robot.commands.claw.ClawToggle;
 import frc.robot.commands.claw.IntakeEmergencyStop;
 import frc.robot.commands.claw.IntakeGrab;
+import frc.robot.commands.claw.IntakeGrabContinuous;
 import frc.robot.commands.claw.IntakeStop;
 import frc.robot.commands.claw.IntakeThrow;
+import frc.robot.commands.claw.IntakeThrowContinuous;
 import frc.robot.commands.extend.MoveExtenderBackwardsPID;
 import frc.robot.commands.extend.MoveExtenderForwardPID;
-import frc.robot.commands.pivot.PivotDownPID;
-import frc.robot.commands.pivot.PivotUpPID;
-import frc.robot.commands.AutoGroups.AutoGroup_Balance;
-import frc.robot.commands.AutoGroups.AutoGroup_LeaveCommAndBalance;
 import frc.robot.subsystems.*;
 import java.util.HashMap;
 
@@ -35,7 +29,6 @@ public class RobotContainer {
   private static final Limelight m_limelight = new Limelight();
   private static final GyroScope m_gyro = new GyroScope();
   private static final IntakeSub m_intake = new IntakeSub();
-  private static final PivotSubPID m_pivotMotor = new PivotSubPID();
   private static final ClawSub m_clawMotor = new ClawSub();
   private static final ExtensionSubPID m_extensionMotor = new ExtensionSubPID();
 
@@ -60,15 +53,6 @@ public class RobotContainer {
    * main.add("Roll", 0).withWidget(BuiltInWidgets.kGyro).getEntry();
    */
   private GenericEntry entry_GyroZ = main.add("Yaw (Side to Side)", 0).withWidget(BuiltInWidgets.kGyro).getEntry();
-  // CLAW INFO
-  private GenericEntry entry_ClawEncoder = main.add("Claw Encoder", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-  // PIVOT INFO
-  private GenericEntry entry_PivotEncoder = main.add("Pivot Encoder", 0).withWidget(BuiltInWidgets.kTextView)
-      .getEntry();
-  private GenericEntry entry_PivotMaxAngle = main.add("Pivot Max Angle", 0).withWidget(BuiltInWidgets.kTextView)
-      .getEntry();
-  // EXTENSION INFO
-  private GenericEntry entry_ExtEncoder = main.add("Ext Encoder", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
   // LIMELIGHT INFO
   private GenericEntry entry_LimelightXOffset = main.add("LimelightXOffset", 0).withWidget(BuiltInWidgets.kTextView)
       .getEntry();
@@ -97,8 +81,6 @@ public class RobotContainer {
     // entry_ClawEncoder.setDouble(m_clawMotor.getClawEncoder().getPosition());
 
     // //PIVOT
-    entry_PivotEncoder.setDouble(m_pivotMotor.getEncoder().getPosition());
-    entry_PivotMaxAngle.setDouble(m_pivotMotor.getMaxAngle());
 
     // //EXTENSION INFO
     // entry_ExtEncoder.setDouble(m_extensionMotor.getEncoder().getPosition());
@@ -121,8 +103,6 @@ public class RobotContainer {
     // m_autoChooser.addOption("Place and Leave", new AutoGroup_PlaceAndLeave(m_drivetrain, m_gyro, m_pivotMotor, m_extensionMotor, m_clawMotor));
     // m_autoChooser.addOption("Grab Claw and Drop Middle", new AutoGroup_MiddleDrop(m_drivetrain, m_pivotMotor, m_extensionMotor, m_clawMotor));
     // m_autoChooser.addOption("Place and Balance", new AutoGroup_PlaceAndBalance(m_drivetrain, m_gyro, m_pivotMotor, m_extensionMotor, m_clawMotor));
-    m_autoChooser.addOption("Leave and Balance", new AutoGroup_LeaveCommAndBalance(m_drivetrain, m_gyro));
-    m_autoChooser.addOption("Balance", new AutoGroup_Balance(m_drivetrain, m_gyro));
     m_autoChooser.addOption("Leave ", new MoveDistance(m_drivetrain, 5, false));
     // m_autoChooser.addOption("Set Extender Distance", new ExtenderSetPositionWaitForComplete(m_extensionMotor, 4));
     main.add("Auto Routine", m_autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
@@ -133,7 +113,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     m_drivetrain.setDefaultCommand(new ArcadeDrive(m_drivetrain, m_controller_drive));
     // m_extensionMotor.setDefaultCommand(new ExtenderMove(m_extensionMotor));
-    m_clawMotor.setDefaultCommand(new ClawMove(m_clawMotor));
 
     // Add joystick buttons to maps
     controllerButtons_drive.put("trigger", new JoystickButton(m_controller_drive, 1));
@@ -162,34 +141,30 @@ public class RobotContainer {
     // turn left 90 degrees
     // controllerButtons_drive.get("10").onTrue(new TurnBy(m_drivetrain, m_gyro, 90));
     // reset encoders
-    controllerButtons_drive.get("8").onTrue(resetEncodersCommand());
-    controllerButtons_drive.get("1").onTrue(new IntakeGrab(m_intake));
-    controllerButtons_drive.get("2").onTrue(new IntakeStop(m_intake));
-    controllerButtons_drive.get("3").onTrue(new IntakeThrow(m_intake));
-    controllerButtons_drive.get("4").onTrue(new IntakeEmergencyStop(m_intake));
+    controllerButtons_arm.get("8").onTrue(resetEncodersCommand());
+    controllerButtons_arm.get("1").onTrue(new IntakeGrabContinuous(m_intake));
+    controllerButtons_arm.get("2").onTrue(new IntakeStop(m_intake));
+    controllerButtons_arm.get("3").onTrue(new IntakeThrowContinuous(m_intake));
+    controllerButtons_arm.get("4").onTrue(new IntakeEmergencyStop(m_intake));
+    controllerButtons_arm.get("5").whileTrue(new IntakeGrab(m_intake));
+    controllerButtons_arm.get("6").whileTrue(new IntakeThrow(m_intake));
+
     //  controllerButtons_drive.get("9").onTrue(new AutoGroup_MiddleDrop(m_drivetrain, m_pivotMotor, m_extensionMotor, m_clawMotor));
 
 
     //ARM CONTROLLER
     // toggle claw clamp
     // controllerButtons_arm.get("1").toggleOnTrue(Commands.startEnd(m_clawMotor::clamp2, m_clawMotor::moveMotors, m_clawMotor));
-    controllerButtons_arm.get("trigger").onTrue(new ClawToggle(m_clawMotor));
-    // moves pivot down
-    controllerButtons_arm.get("2").whileTrue(new PivotDownPID(m_pivotMotor));
-    // moves pivot up
-    controllerButtons_arm.get("3").whileTrue(new PivotUpPID(m_pivotMotor));
-    // retracts arm
-    controllerButtons_arm.get("4").whileTrue(new MoveExtenderBackwardsPID(m_extensionMotor));
+    // moves pivot down    // retracts arm
+    // controllerButtons_arm.get("4").whileTrue(new MoveExtenderBackwardsPID(m_extensionMotor));
     // extends arm
-    controllerButtons_arm.get("5").whileTrue(new MoveExtenderForwardPID(m_extensionMotor));
+    // controllerButtons_arm.get("5").whileTrue(new MoveExtenderForwardPID(m_extensionMotor));
     // // select cube mode
     // controllerButtons_arm.get("6").onTrue(new SetConeMode(m_limelight, m_clawMotor));
     // // select cube mode
     // controllerButtons_arm.get("7").onTrue(new SetCubeMode(m_limelight, m_clawMotor));
     //close claw
-    controllerButtons_arm.get("8").whileTrue(new ClawDecrementPosition(m_clawMotor));
     //open claw
-    controllerButtons_arm.get("9").whileTrue(new ClawIncrementPositionV2(m_clawMotor));
 
     // controllerButtons_arm.get("10").onTrue(new Group_RetractAll(m_pivotMotor, m_extensionMotor));
     // move arm to have a 90 degree with the floor

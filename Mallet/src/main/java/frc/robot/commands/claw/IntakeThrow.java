@@ -9,6 +9,7 @@ public class IntakeThrow extends CommandBase{
     // Creation Function of the Class
     public IntakeThrow(IntakeSub intake) {
         myIntake = intake;
+        addRequirements(intake);
     }
 
     // Called when the command is initially scheduled.
@@ -28,11 +29,13 @@ public class IntakeThrow extends CommandBase{
     // motor.
     @Override
     public void end(boolean interrupted) {
+        myIntake.setDirection(0);
+
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 }

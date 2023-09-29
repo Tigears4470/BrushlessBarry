@@ -9,6 +9,7 @@ public class IntakeEmergencyStop extends CommandBase{
     // Creation Function of the Class
     public IntakeEmergencyStop(IntakeSub intake) {
         myIntake = intake;
+        addRequirements(intake);
     }
 
     // Called when the command is initially scheduled.
