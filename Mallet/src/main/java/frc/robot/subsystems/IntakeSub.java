@@ -5,6 +5,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.K_IntakeSub;
@@ -14,6 +15,7 @@ public class IntakeSub extends SubsystemBase{
   // ID - 7
   private final CANSparkMax motor;
   private final RelativeEncoder encoder;
+  private final DigitalInput limitSwitch;
 
   // -1 = grab, 0 = idle, 1 = throw
   private double direction;
@@ -22,6 +24,7 @@ public class IntakeSub extends SubsystemBase{
   public IntakeSub(){
     if(K_IntakeSub.isUsingIntake){
       motor = new CANSparkMax(7, MotorType.kBrushless);
+      limitSwitch = new DigitalInput(0);
       encoder = motor.getEncoder();
       direction = 0;
 
@@ -35,6 +38,7 @@ public class IntakeSub extends SubsystemBase{
     } else {
       motor = null;
       encoder = null;
+      limitSwitch = null;
     }
   }
 
@@ -72,7 +76,11 @@ public class IntakeSub extends SubsystemBase{
   @Override
   public void periodic() {
     if (K_IntakeSub.isUsingIntake) {
-      motor.setVoltage(direction * K_IntakeSub.voltage);
+      if(!limitSwitch.get()){
+        motor.setVoltage(direction * K_IntakeSub.voltage);
+      }else{
+        motor.setVoltage(0);
+      }
 
       SmartDashboard.putNumber("Claw Encoder", encoder.getPosition());
       SmartDashboard.putNumber("Claw Direction", direction);

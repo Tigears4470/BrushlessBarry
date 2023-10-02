@@ -4,6 +4,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.SparkMaxPIDController;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.K_ExtSub;
@@ -17,6 +19,8 @@ public class ExtensionSubPID extends SubsystemBase{
   private final CANSparkMax motor;
   private final SparkMaxPIDController pid;
   private final RelativeEncoder encoder;
+  private final DigitalInput maxRetract;
+  private final DigitalInput maxExtend;
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxVel, minVel, maxAcc, allowedErr;
   
   // Limits range of motion
@@ -29,6 +33,8 @@ public class ExtensionSubPID extends SubsystemBase{
       motor = new CANSparkMax(6, MotorType.kBrushless);
       encoder = motor.getEncoder();
       pid = motor.getPIDController();
+      maxRetract = new DigitalInput(0);
+      maxExtend = new DigitalInput(0);
       motor.setIdleMode(IdleMode.kBrake);
       motor.setInverted(false);
 
@@ -105,6 +111,8 @@ public class ExtensionSubPID extends SubsystemBase{
       encoder = null;
       motor = null;
       pid = null;
+      maxExtend = null;
+      maxRetract = null;
     }
   }
 
