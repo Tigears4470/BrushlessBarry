@@ -23,7 +23,7 @@ public class IntakeSub extends SubsystemBase{
   
   public IntakeSub(){
     if(K_IntakeSub.isUsingIntake){
-      motor = new CANSparkMax(7, MotorType.kBrushless);
+      motor = new CANSparkMax(5, MotorType.kBrushless);
       limitSwitch = new DigitalInput(0);
       encoder = motor.getEncoder();
       direction = 0;
@@ -76,7 +76,7 @@ public class IntakeSub extends SubsystemBase{
   @Override
   public void periodic() {
     if (K_IntakeSub.isUsingIntake) {
-      if(!limitSwitch.get()){
+      if(limitSwitch.get()){
         motor.setVoltage(direction * K_IntakeSub.voltage);
       }else{
         motor.setVoltage(0);

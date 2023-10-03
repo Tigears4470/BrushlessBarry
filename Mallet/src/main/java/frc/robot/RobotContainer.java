@@ -111,7 +111,8 @@ public class RobotContainer {
 
   // assign button functions
   private void configureButtonBindings() {
-    m_drivetrain.setDefaultCommand(new ArcadeDrive(m_drivetrain, m_controller_drive));
+    if(Constants.K_ISUSINGDRIVETRAIN)
+      m_drivetrain.setDefaultCommand(new ArcadeDrive(m_drivetrain, m_controller_drive));
     // m_extensionMotor.setDefaultCommand(new ExtenderMove(m_extensionMotor));
 
     // Add joystick buttons to maps
@@ -141,14 +142,15 @@ public class RobotContainer {
     // turn left 90 degrees
     // controllerButtons_drive.get("10").onTrue(new TurnBy(m_drivetrain, m_gyro, 90));
     // reset encoders
-    controllerButtons_arm.get("8").onTrue(resetEncodersCommand());
-    controllerButtons_arm.get("1").onTrue(new IntakeGrabContinuous(m_intake));
-    controllerButtons_arm.get("2").onTrue(new IntakeStop(m_intake));
-    controllerButtons_arm.get("3").onTrue(new IntakeThrowContinuous(m_intake));
-    controllerButtons_arm.get("4").onTrue(new IntakeEmergencyStop(m_intake));
-    controllerButtons_arm.get("5").whileTrue(new IntakeGrab(m_intake));
-    controllerButtons_arm.get("6").whileTrue(new IntakeThrow(m_intake));
-
+    if(Constants.K_IntakeSub.isUsingIntake){
+      controllerButtons_arm.get("8").onTrue(resetEncodersCommand());
+      controllerButtons_arm.get("1").onTrue(new IntakeGrabContinuous(m_intake));
+      controllerButtons_arm.get("2").onTrue(new IntakeStop(m_intake));
+      controllerButtons_arm.get("3").onTrue(new IntakeThrowContinuous(m_intake));
+      controllerButtons_arm.get("4").onTrue(new IntakeEmergencyStop(m_intake));
+      controllerButtons_arm.get("5").whileTrue(new IntakeGrab(m_intake));
+      controllerButtons_arm.get("6").whileTrue(new IntakeThrow(m_intake));
+    }
     //  controllerButtons_drive.get("9").onTrue(new AutoGroup_MiddleDrop(m_drivetrain, m_pivotMotor, m_extensionMotor, m_clawMotor));
 
 

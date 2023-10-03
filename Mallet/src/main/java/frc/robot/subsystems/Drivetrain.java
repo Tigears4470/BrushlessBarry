@@ -35,12 +35,12 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     if(Constants.K_ISUSINGDRIVETRAIN){
-      m_flMotor = new CANSparkMax(3, MotorType.kBrushless);
-      m_blMotor = new CANSparkMax(4, MotorType.kBrushless);
+      m_flMotor = new CANSparkMax(6, MotorType.kBrushless);
+      m_blMotor = new CANSparkMax(6, MotorType.kBrushless);
       m_left = new MotorControllerGroup(m_flMotor, m_blMotor);
 
-      m_frMotor = new CANSparkMax(1, MotorType.kBrushless);
-      m_brMotor = new CANSparkMax(2, MotorType.kBrushless);
+      m_frMotor = new CANSparkMax(6, MotorType.kBrushless);
+      m_brMotor = new CANSparkMax(6, MotorType.kBrushless);
       m_right = new MotorControllerGroup(m_frMotor, m_brMotor);
       
       m_rightBackEncoder = m_brMotor.getEncoder();
