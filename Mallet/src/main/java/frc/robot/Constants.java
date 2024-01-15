@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+
 public final class Constants {
     public static final double K_SPEED = 0.5; //speed for turning
     public static final double K_WHEEL_DIAMETER_INCH = 6; //diameter of the wheels in inches
@@ -57,5 +59,13 @@ public final class Constants {
         public static final double cubeMaxCurrent = .2;
         public static final double voltage = .8;
     }
+
+    public static final class K_PneumaticSub {
+        public static final boolean isUsingPneumatic = true;
+        public static final PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
+        public static final int forwardChannel = -1;
+        public static final int reverseChannel = -1;
+    }
+
     public static final boolean K_ISUSINGDRIVETRAIN = true;
 }
