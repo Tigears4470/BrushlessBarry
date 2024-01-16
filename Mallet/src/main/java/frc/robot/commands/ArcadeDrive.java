@@ -1,17 +1,17 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Drivetrain;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class ArcadeDrive extends CommandBase {
   private final Drivetrain m_drivetrain;
-  private Joystick m_joystick;
+  private CommandXboxController xboxController;
   private double startTime, currentTime;
 
-  public ArcadeDrive(Drivetrain drivetrain, Joystick joystick) {
+  public ArcadeDrive(Drivetrain drivetrain, CommandXboxController xboxController) {
     m_drivetrain = drivetrain;
-    m_joystick = joystick;
+    this.xboxController = xboxController;
     addRequirements(drivetrain);
   }
 
@@ -21,7 +21,7 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void execute() {
     //Checks if the joystick is not active in order to update startTime
-    m_drivetrain.arcadeDrive(-m_joystick.getRawAxis(1), -m_joystick.getRawAxis(0));
+    m_drivetrain.arcadeDrive(xboxController.getLeftY(), xboxController.getLeftX());
   }
 
   @Override
