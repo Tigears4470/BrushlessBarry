@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
+import frc.robot.commands.Pneumatic.PneumaticForward;
+import frc.robot.commands.Pneumatic.PneumaticReverse;
+import frc.robot.commands.Pneumatic.PneumaticStop;
 import frc.robot.commands.Pneumatic.PneumaticToggle;
 import frc.robot.commands.claw.IntakeEmergencyStop;
 import frc.robot.commands.claw.IntakeGrab;
@@ -28,6 +31,7 @@ import java.util.HashMap;
 public class RobotContainer {
   // INIT SUBSYSTEMS
   private static final Drivetrain m_drivetrain = new Drivetrain();
+  private static final PneumaticSub pneumatic = new PneumaticSub();
   private static final Limelight m_limelight = new Limelight();
   private static final GyroScope m_gyro = new GyroScope();
   private static final IntakeSub m_intake = new IntakeSub();
@@ -36,8 +40,6 @@ public class RobotContainer {
 
   // INIT XBOX CONTROLLER
   public static CommandXboxController xboxController = new CommandXboxController(0);
-  // INIT XBOX CONTROLLER BUTTONS
-  public static HashMap<String, Trigger> xboxButtons = new HashMap<String, Trigger>();
 
   // SMARTDASHBOARD
   // private SendableChooser<String> m_autoChooser = new SendableChooser<String>();
@@ -101,6 +103,13 @@ public class RobotContainer {
       
       xboxController.rightBumper().whileTrue(new IntakeGrab(m_intake));
       xboxController.rightTrigger().whileTrue(new IntakeThrow(m_intake));
+    }
+
+    if(Constants.K_PneumaticSub.isUsingPneumatic){
+      xboxController.start().onTrue(new PneumaticToggle(pneumatic));
+      xboxController.a().onTrue(new PneumaticReverse(pneumatic));
+      xboxController.b().onTrue(new PneumaticForward(pneumatic));
+      xboxController.povDown().onTrue(new PneumaticStop(pneumatic));
     }
   }
 
