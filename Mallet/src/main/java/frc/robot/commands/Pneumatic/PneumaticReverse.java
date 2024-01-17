@@ -18,7 +18,7 @@ public class PneumaticReverse extends CommandBase {
 
     @Override
     public void execute() {
-        pneumaticSub.moveForward();
+        pneumaticSub.moveReverse();
     }
 
     @Override
