@@ -63,8 +63,8 @@ public final class Constants {
     public static final class K_PneumaticSub {
         public static final boolean isUsingPneumatic = true;
         public static final PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
-        public static final int forwardChannel = -1;
-        public static final int reverseChannel = -1;
+        public static final int forwardChannel = 0;
+        public static final int reverseChannel = 1;
     }
 
     public static final boolean K_ISUSINGDRIVETRAIN = true;
