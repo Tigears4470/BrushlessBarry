@@ -11,9 +11,9 @@ public class PneumaticSub extends SubsystemBase {
     private final DoubleSolenoid doubleSolenoid;
 
     public PneumaticSub() {
-        if(K_PneumaticSub.isUsingPneumatic){
-            compressor = new Compressor(K_PneumaticSub.moduleType);
-            doubleSolenoid = new DoubleSolenoid(K_PneumaticSub.moduleType, K_PneumaticSub.forwardChannel, K_PneumaticSub.reverseChannel);
+        if(K_PneumaticSub.isUsingPneumatic) {
+            compressor = new Compressor(0, K_PneumaticSub.moduleType);
+            doubleSolenoid = new DoubleSolenoid(0, K_PneumaticSub.moduleType, K_PneumaticSub.forwardChannel, K_PneumaticSub.reverseChannel);
             //Initializes Default Position for Double Solenoids ONLY
             doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
         }else{

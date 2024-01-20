@@ -33,7 +33,7 @@ public final class Constants {
 
 
     public static final class K_ExtSub {
-        public static final boolean isUsingExt = true;     //If is using the extension subsystem
+        public static final boolean isUsingExt = false;     //If is using the extension subsystem
         public static final boolean devMode = false;
         public static final double extInchesPerSecond = 12;
         public static final int gearRatio = 60;
@@ -42,7 +42,7 @@ public final class Constants {
     }
 
     public static final class K_PivotSub {
-        public static final boolean isUsingPivot = true;
+        public static final boolean isUsingPivot = false;
         public static final boolean devMode = true;
         public static final double pivotSpeed = 3.5;
         public static final int gearRatio = 60;
@@ -50,7 +50,7 @@ public final class Constants {
     }   
     
     public static final class K_IntakeSub {
-        public static final boolean isUsingIntake = true;    //If is using the claw subsystem
+        public static final boolean isUsingIntake = false;    //If is using the claw subsystem
         public static final double calibrateStartingAngle = 90;
         public static final double calibrateEndingAngle = 180;
         public static final double calibrateAngleEncoderValue = 9.57146931;
@@ -67,5 +67,5 @@ public final class Constants {
         public static final int reverseChannel = 1;
     }
 
-    public static final boolean K_ISUSINGDRIVETRAIN = true;
+    public static final boolean K_ISUSINGDRIVETRAIN = false;
 }

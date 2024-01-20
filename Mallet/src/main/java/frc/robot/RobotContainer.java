@@ -85,7 +85,7 @@ public class RobotContainer {
     m_autoChooser.setDefaultOption("Do Nothing", new WaitCommand(0));
     m_autoChooser.addOption("Leave ", new MoveDistance(m_drivetrain, 5, false));
     main.add("Auto Routine", m_autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
-
+    
   }
 
   // assign button functions
