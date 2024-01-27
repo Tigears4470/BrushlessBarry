@@ -37,6 +37,7 @@ public class RobotContainer {
   private static final IntakeSub m_intake = new IntakeSub();
   private static final ClawSub m_clawMotor = new ClawSub();
   private static final ExtensionSubPID m_extensionMotor = new ExtensionSubPID();
+  private static final Breakbeam breakbeam = new Breakbeam();
 
   // INIT XBOX CONTROLLER
   public static CommandXboxController xboxController = new CommandXboxController(0);
