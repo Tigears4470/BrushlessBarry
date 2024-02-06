@@ -35,7 +35,7 @@ public class RobotContainer {
   private static final Limelight m_limelight = new Limelight();
   private static final GyroScope m_gyro = new GyroScope();
   private static final IntakeSub m_intake = new IntakeSub();
-  private static final ClawSub m_clawMotor = new ClawSub();
+  // private static final ClawSub m_clawMotor = new ClawSub();
   private static final ExtensionSubPID m_extensionMotor = new ExtensionSubPID();
   private static final Breakbeam breakbeam = new Breakbeam();
 
@@ -78,7 +78,7 @@ public class RobotContainer {
     // //LIMELIGHT INFO
     entry_LimelightXOffset.setDouble(m_limelight.getXOffset());
     entry_LimelightYOffset.setDouble(m_limelight.getYOffset());
-    entry_ClawClosed.setBoolean(m_clawMotor.getIsOpen());
+    // entry_ClawClosed.setBoolean(m_clawMotor.getIsOpen());
   }
 
   public void initializeAutoChooser() {    
@@ -100,7 +100,7 @@ public class RobotContainer {
       xboxController.y().onTrue(new IntakeEmergencyStop(m_intake));
 
       xboxController.leftBumper().onTrue(new IntakeGrabContinuous(m_intake));
-      xboxController.leftTrigger().onTrue(new IntakeThrowContinuous(m_intake));
+      xboxController.leftTrigger().onTrue(new IntakeThrowContinuous(m_intake)); // rb = down, rt = up, x = stop, y = estop
       
       xboxController.rightBumper().whileTrue(new IntakeGrab(m_intake));
       xboxController.rightTrigger().whileTrue(new IntakeThrow(m_intake));

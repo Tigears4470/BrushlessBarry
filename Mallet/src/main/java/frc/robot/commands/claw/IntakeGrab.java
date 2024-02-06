@@ -21,7 +21,7 @@ public class IntakeGrab extends CommandBase{
     // Relatively change claw by joystick
     @Override
     public void execute() {
-        myIntake.setDirection(-.2);
+        myIntake.setDirection(-.4);
     }
 
     // Called once the command ends or is interrupted.

@@ -13,38 +13,49 @@ import frc.robot.Constants.K_IntakeSub;
 public class IntakeSub extends SubsystemBase{
   // Idle - Break
   // ID - 7
-  private final CANSparkMax motor;
-  private final RelativeEncoder encoder;
+  private final CANSparkMax motor1;
+  private final RelativeEncoder encoder1;
+  private final CANSparkMax motor2;
+  private final RelativeEncoder encoder2;
+  
   private final DigitalInput limitSwitch;
 
-  // -1 = grab, 0 = idle, 1 = throw
   private double direction;
   // controls speed of motor
   
   public IntakeSub(){
     if(K_IntakeSub.isUsingIntake){
-      motor = new CANSparkMax(5, MotorType.kBrushless);
+      motor1 = new CANSparkMax(K_IntakeSub.MOTOR_1_CAN, MotorType.kBrushless);
+      encoder1 = motor1.getEncoder();
+      motor1.setIdleMode(IdleMode.kBrake);
+
+      motor2 = new CANSparkMax(K_IntakeSub.MOTOR_2_CAN, MotorType.kBrushless);
+      encoder2 = motor2.getEncoder();
+      motor2.setIdleMode(IdleMode.kBrake);
+
+      motor2.follow(motor1, K_IntakeSub.followerInverted);
+
       limitSwitch = new DigitalInput(0);
-      encoder = motor.getEncoder();
+
       direction = 0;
 
-      motor.setIdleMode(IdleMode.kBrake);
-      motor.setInverted(true);
+      
+      motor1.setInverted(true);
       // set original position which should represent original position
-      encoder.setPosition(0);
+      encoder1.setPosition(0);
 
       // control intake speed
-      motor.setSmartCurrentLimit(8, 100);
+      motor1.setSmartCurrentLimit(30, 100);
     } else {
-      motor = null;
-      encoder = null;
+      motor1 = null;
+      encoder1 = null;
       limitSwitch = null;
     }
   }
 
   //Return the encoder
   public RelativeEncoder getClawEncoder(){
-    return encoder;
+    return encoder1;
   }
 
   //Return if the intake is grabbing or throwing or neither
@@ -63,26 +74,27 @@ public class IntakeSub extends SubsystemBase{
   // returns current through motor
   public double getCurrent() {
     if(K_IntakeSub.isUsingIntake){
-      return motor.getOutputCurrent();
+      return motor1.getOutputCurrent();
     }
     return 0.0;
   }
 
   // Stops the motor in case of emergency
   public void emergencyStop(){
-    motor.stopMotor();
+    motor1.stopMotor();
   }
 
   @Override
   public void periodic() {
     if (K_IntakeSub.isUsingIntake) {
-      if(limitSwitch.get()){
-        motor.setVoltage(direction * K_IntakeSub.voltage);
-      }else{
-        motor.setVoltage(0);
-      }
+      // if(limitSwitch.get()){
+      //   motor1.setVoltage(direction * K_IntakeSub.voltage);
+      // }else{
+      //   motor1.setVoltage(0);
+      // }
+      motor1.setVoltage(direction * K_IntakeSub.voltage);
 
-      SmartDashboard.putNumber("Claw Encoder", encoder.getPosition());
+      SmartDashboard.putNumber("Claw Encoder", encoder1.getPosition());
       SmartDashboard.putNumber("Claw Direction", direction);
     }
   }
