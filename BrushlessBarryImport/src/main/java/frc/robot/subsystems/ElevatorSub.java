@@ -8,9 +8,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.K_IntakeSub;
+import frc.robot.Constants.K_ElevatorSub;
 
-public class IntakeSub extends SubsystemBase {
+public class ElevatorSub extends SubsystemBase {
   // Idle - Break
   // ID - 7
   private final CANSparkMax motor1;
@@ -23,17 +23,17 @@ public class IntakeSub extends SubsystemBase {
   private double direction;
   // controls speed of motor
 
-  public IntakeSub() {
-    if (K_IntakeSub.isUsingIntake) {
-      motor1 = new CANSparkMax(K_IntakeSub.MOTOR_1_CAN, MotorType.kBrushless);
+  public ElevatorSub() {
+    if (K_ElevatorSub.isUsingElevator) {
+      motor1 = new CANSparkMax(K_ElevatorSub.MOTOR_1_CAN, MotorType.kBrushless);
       encoder1 = motor1.getEncoder();
       motor1.setIdleMode(IdleMode.kBrake);
 
-      motor2 = new CANSparkMax(K_IntakeSub.MOTOR_2_CAN, MotorType.kBrushless);
+      motor2 = new CANSparkMax(K_ElevatorSub.MOTOR_2_CAN, MotorType.kBrushless);
       encoder2 = motor2.getEncoder();
       motor2.setIdleMode(IdleMode.kBrake);
 
-      motor2.follow(motor1, K_IntakeSub.followerInverted);
+      motor2.follow(motor1, K_ElevatorSub.followerInverted);
 
       // limitSwitch = new DigitalInput(0);
 
@@ -59,7 +59,7 @@ public class IntakeSub extends SubsystemBase {
 
   // Return if the intake is grabbing or throwing or neither
   public double getDirection() {
-    if (K_IntakeSub.isUsingIntake) {
+    if (K_ElevatorSub.isUsingElevator) {
       return direction;
     }
     return 0;
@@ -72,7 +72,7 @@ public class IntakeSub extends SubsystemBase {
 
   // returns current through motor
   public double getCurrent() {
-    if (K_IntakeSub.isUsingIntake) {
+    if (K_ElevatorSub.isUsingElevator) {
       return motor1.getOutputCurrent();
     }
     return 0.0;
@@ -85,13 +85,8 @@ public class IntakeSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (K_IntakeSub.isUsingIntake) {
-      // if(limitSwitch.get()){
-      // motor1.setVoltage(direction * K_IntakeSub.voltage);
-      // }else{
-      // motor1.setVoltage(0);
-      // }
-      motor1.setVoltage(direction * K_IntakeSub.voltage);
+    if (K_ElevatorSub.isUsingElevator) {
+      motor1.setVoltage(direction * K_ElevatorSub.voltage);
 
       SmartDashboard.putNumber("Claw Encoder", encoder1.getPosition());
       SmartDashboard.putNumber("Claw Direction", direction);

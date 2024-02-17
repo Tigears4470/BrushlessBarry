@@ -23,6 +23,10 @@ import frc.robot.commands.claw.IntakeGrabContinuous;
 import frc.robot.commands.claw.IntakeStop;
 import frc.robot.commands.claw.IntakeThrow;
 import frc.robot.commands.claw.IntakeThrowContinuous;
+import frc.robot.commands.elevator.ElevatorEmergencyStop;
+import frc.robot.commands.elevator.ElevatorDown;
+import frc.robot.commands.elevator.ElevatorStop;
+import frc.robot.commands.elevator.ElevatorUp;
 import frc.robot.commands.extend.MoveExtenderBackwardsPID;
 import frc.robot.commands.extend.MoveExtenderForwardPID;
 import frc.robot.subsystems.*;
@@ -35,6 +39,7 @@ public class RobotContainer {
   private static final Limelight m_limelight = new Limelight();
   private static final GyroScope m_gyro = new GyroScope();
   private static final IntakeSub m_intake = new IntakeSub();
+  private static final ElevatorSub m_elevator = new ElevatorSub();
   // private static final ClawSub m_clawMotor = new ClawSub();
   private static final ExtensionSubPID m_extensionMotor = new ExtensionSubPID();
   private static final Breakbeam breakbeam = new Breakbeam();
@@ -96,20 +101,26 @@ public class RobotContainer {
       m_drivetrain.setDefaultCommand(new ArcadeDrive(m_drivetrain, xboxController));
 
     if(Constants.K_IntakeSub.isUsingIntake){
+      // rb = down, rt = up, x = stop, y = estop
       xboxController.x().onTrue(new IntakeStop(m_intake));
       xboxController.y().onTrue(new IntakeEmergencyStop(m_intake));
-
-      xboxController.leftBumper().onTrue(new IntakeGrabContinuous(m_intake));
-      xboxController.leftTrigger().onTrue(new IntakeThrowContinuous(m_intake)); // rb = down, rt = up, x = stop, y = estop
-      
       xboxController.rightBumper().whileTrue(new IntakeGrab(m_intake));
       xboxController.rightTrigger().whileTrue(new IntakeThrow(m_intake));
     }
 
+    if(Constants.K_ElevatorSub.isUsingElevator){
+      // rb = down, rt = up, a = stop, b = estop
+      xboxController.a().onTrue(new ElevatorStop(m_elevator));
+      xboxController.b().onTrue(new ElevatorEmergencyStop(m_elevator));
+      xboxController.leftBumper().whileTrue(new ElevatorDown(m_elevator));
+      xboxController.leftTrigger().whileTrue(new ElevatorUp(m_elevator));
+
+    }
+
     if(Constants.K_PneumaticSub.isUsingPneumatic){
       xboxController.start().onTrue(new PneumaticToggle(pneumatic));
-      xboxController.a().onTrue(new PneumaticReverse(pneumatic));
-      xboxController.b().onTrue(new PneumaticForward(pneumatic));
+      xboxController.povLeft().onTrue(new PneumaticReverse(pneumatic));
+      xboxController.povRight().onTrue(new PneumaticForward(pneumatic));
       xboxController.povDown().onTrue(new PneumaticStop(pneumatic));
     }
   }
