@@ -48,6 +48,8 @@ public class IntakeSub extends SubsystemBase {
     } else {
       motor1 = null;
       encoder1 = null;
+      motor2 = null;
+      encoder2 = null;
       // limitSwitch = null;
     }
   }

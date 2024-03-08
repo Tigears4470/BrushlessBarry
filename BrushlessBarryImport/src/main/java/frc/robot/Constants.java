@@ -53,23 +53,24 @@ public final class Constants {
     public static final class K_IntakeSub {
         public static final int MOTOR_1_CAN = 9;
         public static final int MOTOR_2_CAN = 10;
-        public static final boolean followerInverted = true;
-        public static final boolean isUsingIntake = true; // If is using the intake subsystem
+        public static final boolean followerInverted = false;
+        public static final boolean isUsingIntake = false; // If is using the intake subsystem
         public static final double calibrateStartingAngle = 90;
         public static final double calibrateEndingAngle = 180;
         public static final double calibrateAngleEncoderValue = 9.57146931;
         public static final double clampVoltage = 1.5;
         public static final double coneMaxCurrent = .3;
         public static final double cubeMaxCurrent = .2;
-        public static final double voltage = 5;
+        public static final double voltage = 12;
     }
 
     public static final class K_ElevatorSub {
-        public static final int MOTOR_1_CAN = 11;
-        public static final int MOTOR_2_CAN = 12;
+        // NEED TO INVERTONE OF THEM TO SWITCH DIRECTIOn
+        public static final int MOTOR_1_CAN = 11; // lead
+        public static final int MOTOR_2_CAN = 12; // follow
         public static final boolean followerInverted = true;
-        public static final boolean isUsingElevator = true;    //If is using the elevator subsystem
-        public static final double voltage = 5;
+        public static final boolean isUsingElevator = true; // If is using the elevator subsystem
+        public static final double voltage = 2;
     }
 
     public static final class K_PneumaticSub {

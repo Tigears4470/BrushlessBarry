@@ -39,7 +39,7 @@ public class ElevatorSub extends SubsystemBase {
 
       direction = 0;
 
-      motor1.setInverted(true);
+      motor1.setInverted(false);
       // set original position which should represent original position
       encoder1.setPosition(0);
 
@@ -48,6 +48,8 @@ public class ElevatorSub extends SubsystemBase {
     } else {
       motor1 = null;
       encoder1 = null;
+      motor2 = null;
+      encoder2 = null;
       // limitSwitch = null;
     }
   }
